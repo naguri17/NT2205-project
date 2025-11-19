@@ -1,8 +1,17 @@
+import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { uptime } from "process";
+import { shouldBeUser } from "./middleware/authMiddleware.js";
 
 const app = new Hono();
+app.use("*", clerkMiddleware());
+
+app.get("/test", shouldBeUser, (c) => {
+  return c.json({
+    message: "Payment service authenticated!",
+  });
+});
 
 app.get("/health", (c) => {
   return c.json({
