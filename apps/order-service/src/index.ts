@@ -1,6 +1,26 @@
 import Fastify from "fastify";
+import authPlugin from "./plugins/authPlugin.js";
+import cors from "@fastify/cors";
 
 const fastify = Fastify();
+
+fastify.register(authPlugin);
+fastify.register(cors, {
+  origin: ["http://localhost:3000", "http://localhost:3001"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+});
+
+fastify.get(
+  "/test",
+  {
+    preHandler: (req, reply) => fastify.authenticate(req, reply),
+  },
+  async (request, reply) => {
+    return reply.status(200).send({
+      message: "Order service authenticated",
+    });
+  }
+);
 
 fastify.get("/health", async (request, reply) => {
   return reply.status(200).send({
