@@ -15,7 +15,8 @@
     "cors": "^2.8.5",
     "express": "^5.0.3",
     "jsonwebtoken": "^9.0.2",
-    "jwks-rsa": "^3.2.0"
+    "jwks-rsa": "^3.2.0",
+    "@repo/product-db": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
