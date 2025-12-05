@@ -1,6 +1,8 @@
 import Fastify from "fastify";
 import authPlugin from "./plugins/authPlugin.js";
 import cors from "@fastify/cors";
+import { connectOrderDB } from "@repo/order-db";
+import { orderRoute } from "./routes/order.js";
 
 const fastify = Fastify();
 
@@ -30,12 +32,15 @@ fastify.get("/health", async (request, reply) => {
   });
 });
 
+fastify.register(orderRoute);
+
 const start = async () => {
   try {
+    await connectOrderDB();
     await fastify.listen({ port: 8001 });
     console.log("Order service is running on port 8001");
   } catch (err) {
-    fastify.log.error(err);
+    console.error(err);
     process.exit(1);
   }
 };

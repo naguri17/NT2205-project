@@ -90,3 +90,25 @@ export const authMiddleware = async (
     return;
   }
 };
+
+export const adminMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // Lấy thông tin user đã được authMiddleware giải mã trước đó
+  const user = (req as any).user;
+
+  // Lấy danh sách roles từ token Keycloak
+  // Cấu trúc token Keycloak thường là: realm_access: { roles: [...] }
+  const roles = user?.realm_access?.roles || [];
+
+  if (!roles.includes("admin")) {
+    // Nếu không phải admin, chặn luôn và trả về 403 Forbidden
+    res.status(403).json({ message: "Forbidden: Admin access required" });
+    return;
+  }
+
+  // Nếu là admin, cho đi tiếp
+  next();
+};

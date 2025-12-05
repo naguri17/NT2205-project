@@ -92,6 +92,20 @@ async function authPlugin(fastify: FastifyInstance) {
       }
     }
   );
+
+  fastify.decorate(
+    "adminOnly",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const user = (request as any).user;
+
+      const roles = user?.realm_access?.roles || [];
+
+      if (!roles.includes("admin")) {
+        reply.code(403).send({ message: "Forbidden: Admin access required" });
+        throw new Error("Forbidden");
+      }
+    }
+  );
 }
 
 export default fp(authPlugin);

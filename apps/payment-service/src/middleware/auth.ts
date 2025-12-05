@@ -86,3 +86,17 @@ export const authMiddleware = async (c: Context, next: Next) => {
     return c.json({ message: "You're not logged in!" }, 401);
   }
 };
+
+export const adminMiddleware = async (c: Context, next: Next) => {
+  // Lấy user từ context (đã được authMiddleware set vào)
+  const user = c.get("user");
+
+  // Kiểm tra roles
+  const roles = user?.realm_access?.roles || [];
+
+  if (!roles.includes("admin")) {
+    return c.json({ message: "Forbidden: Admin access required" }, 403);
+  }
+
+  await next();
+};
