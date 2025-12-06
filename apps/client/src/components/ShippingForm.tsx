@@ -15,6 +15,13 @@ const ShippingForm = ({
     formState: { errors },
   } = useForm<ShippingFormInputs>({
     resolver: zodResolver(shippingFormSchema as any),
+    defaultValues: {
+      name: "admin",
+      email: "admin@example.com",
+      phone: "1234567890",
+      address: "123 Main St, Anytown",
+      city: "New York",
+    },
   });
 
   const router = useRouter();

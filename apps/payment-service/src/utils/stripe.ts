@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15" as any,
+  apiVersion: "2025-05-28.basil" as any,
 });
 
 export default stripe;
