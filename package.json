@@ -7,10 +7,10 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "setup:env": "chmod +x setup-env.sh && ./setup-env.sh",
+    "setup:env": "node setup-env.js",
     "setup:infra": "docker-compose up -d",
-    "setup:db": "turbo run db:push --filter=product-db",
-    "setup:all": "pnpm setup:env && pnpm install && pnpm setup:infra && echo '⏳ Chờ DB khởi động...' && sleep 5 && pnpm setup:db"
+    "setup:db": "turbo run db:generate db:push --filter=@repo/product-db",
+    "setup:all": "pnpm install && pnpm setup:env && pnpm setup:infra && echo '⏳ Chờ DB khởi động...' && node -e \"setTimeout(() => {}, 5000)\" && pnpm setup:db"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
