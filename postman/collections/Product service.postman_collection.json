@@ -1,0 +1,261 @@
+{
+  "info": {
+    "_postman_id": "9b671b3c-265c-4dfb-9bf1-0be276375992",
+    "name": "Product service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22868683"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "id": "c9cffae3-d90c-4719-97c0-ad8c5bc4e9e0",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{PRODUCT_SERVICE_URL}}/health",
+          "protocol": "https",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test API Auth",
+      "id": "6c2227e5-ce78-490e-aa6d-b8a8fddc4edb",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{PRODUCT_SERVICE_URL}}/test",
+          "protocol": "https",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Category",
+      "id": "5577fd29-f427-4632-8429-3e8415ad7149",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"test\",\n    \"slug\": \"test\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/categories",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Product",
+      "id": "dfc5b080-ed31-4e5a-b73f-2db2a856416f",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n//  \"id\": 9,\n    \"name\": \"Levi’s Classic Denim\",\n    \"shortDescription\":\n      \"Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.\",\n    \"description\":\n      \"Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.\",\n    \"price\": 59.9,\n    \"sizes\": [\"s\", \"m\", \"l\"],\n    \"colors\": [\"blue\", \"green\"],\n    \"images\": { \"blue\": \"/products/8b.png\", \"green\": \"/products/8gr.png\" },\n    \"categorySlug\": \"t-shirts\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/products",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Products",
+      "id": "005a19ca-966e-48cb-bfd9-8642c848a53e",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/products?sort=desc",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "ultra",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update product",
+      "id": "79272497-93c9-4f00-9a20-a738e4ee3439",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Puma Ultra Warm Zip Updated 2\",\n    \"shortDescription\": \"Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.\",\n    \"description\": \"Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.\",\n    \"price\": 59.9,\n    \"sizes\": [\n        \"s\",\n        \"m\",\n        \"l\",\n        \"xl\"\n    ],\n    \"colors\": [\n        \"gray\",\n        \"green\"\n    ],\n    \"images\": {\n        \"gray\": \"/products/2g.png\",\n        \"green\": \"/products/2gr.png\"\n    },\n    \"categorySlug\": \"T-shirts\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/products/2",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "products",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Product",
+      "id": "01953303-f901-4a2e-82ac-e524121cb4c3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/products/2",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "products",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Category",
+      "id": "977d147c-88e9-436a-be22-bee7ad6c80b7",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/categories/2",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "categories",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Categories",
+      "id": "ac51d8e1-98d8-498c-8e7f-4ccaa103e2c3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{PRODUCT_SERVICE_URL}}/categories",
+          "host": [
+            "{{PRODUCT_SERVICE_URL}}"
+          ],
+          "path": [
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "0f320397-fd3e-470d-962c-8c1007518e24",
+      "key": "PRODUCT_SERVICE_URL",
+      "value": "localhost:8000",
+      "type": "default"
+    }
+  ]
+}

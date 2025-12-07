@@ -1,0 +1,137 @@
+{
+  "info": {
+    "_postman_id": "f9bad28c-b155-434b-909c-4a595b906751",
+    "name": "Order service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22868683"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "id": "4e43e863-e7cc-4e9c-8e02-99679a95f42d",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{ORDER_SERVICE_URL}}/health",
+          "protocol": "https",
+          "host": [
+            "{{ORDER_SERVICE_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test API Auth",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "c3fdfe00-1188-4ef9-9546-e5454e97f215",
+            "exec": [
+              "// **********************************************",
+              "// 🛠️ Learn more about scripts and snippets: https://docs.requestly.com/general/api-client/scripts",
+              "// **********************************************"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "7f9c285f-2447-4909-ae41-95b68dd4b7b0",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{ORDER_SERVICE_URL}}/test",
+          "host": [
+            "{{ORDER_SERVICE_URL}}"
+          ],
+          "path": [
+            "test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Orders",
+      "id": "f9aec3c9-d7f0-480d-9907-14346ffeb431",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{ORDER_SERVICE_URL}}/orders",
+          "host": [
+            "{{ORDER_SERVICE_URL}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Orders",
+      "id": "d6342f46-223f-4690-b3c7-a781cf4ee0c6",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{ORDER_SERVICE_URL}}/user-orders",
+          "host": [
+            "{{ORDER_SERVICE_URL}}"
+          ],
+          "path": [
+            "user-orders"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "6fb5fd80-446d-4926-b8d9-1a3774d49ae4",
+      "key": "ORDER_SERVICE_URL",
+      "value": "localhost:8001",
+      "type": "default"
+    }
+  ]
+}

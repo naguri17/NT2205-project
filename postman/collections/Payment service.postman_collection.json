@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "1c3c9ef7-5e69-43e3-8a42-4dd34ea95ed7",
+    "name": "Payment service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22868683"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "id": "7e39182d-ff12-4233-a341-2db95592e440",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{PAYMENT_SERVICE_URL}}/health",
+          "protocol": "https",
+          "host": [
+            "{{PAYMENT_SERVICE_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test API Auth",
+      "id": "ff69e887-778d-4709-b722-bf0703e3f762",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{PAYMENT_SERVICE_URL}}/test",
+          "protocol": "https",
+          "host": [
+            "{{PAYMENT_SERVICE_URL}}"
+          ],
+          "path": [
+            "test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create stripe product",
+      "id": "a5cf3df7-6edc-4d58-8e6e-174f0c420646",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{PAYMENT_SERVICE_URL}}/create-stripe-product",
+          "host": [
+            "{{PAYMENT_SERVICE_URL}}"
+          ],
+          "path": [
+            "create-stripe-product"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Stripe product price",
+      "id": "9593a968-4290-4e39-b4a6-f24960916eee",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{PAYMENT_SERVICE_URL}}/create-stripe-product",
+          "host": [
+            "{{PAYMENT_SERVICE_URL}}"
+          ],
+          "path": [
+            "create-stripe-product"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "2ac4b02d-9e17-41bb-948b-dfc659770a98",
+      "key": "PAYMENT_SERVICE_URL",
+      "value": "localhost:8002",
+      "type": "default"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "info": {
+    "_postman_id": "5680661f-837a-4fd2-a43d-2aaf1245180a",
+    "name": "Identity service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22868683"
+  },
+  "item": [
+    {
+      "name": "Get token",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "2205b4fa-42dc-4e20-8c72-2f5a366ae1ed",
+            "exec": [
+              "// **********************************************",
+              "// 🛠️ Learn more about scripts and snippets: https://docs.requestly.com/general/api-client/scripts",
+              "// **********************************************"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "6904595b-1674-4911-a980-b2055c632c47",
+            "exec": [
+              "// **********************************************",
+              "// 🛠️ Use JavaScript to visualize responses: https://docs.requestly.com/general/api-client/scripts",
+              "const res = pm.response.json()",
+              "console.log(res)",
+              "pm.environment.set(\"access_token\", res.access_token)",
+              "// **********************************************"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "ff6852e7-d625-4045-8a9d-1150585b575a",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "password",
+              "type": "text"
+            },
+            {
+              "key": "client_id",
+              "value": "client-app",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "l2hbJL5o0N2xFZkSDRMKkZzLJcHwKDJ1",
+              "type": "text"
+            },
+            {
+              "key": "username",
+              "value": "lapistia34",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "123456",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8080/realms/NT2205/protocol/openid-connect/token",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8080",
+          "path": [
+            "realms",
+            "NT2205",
+            "protocol",
+            "openid-connect",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
