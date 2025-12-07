@@ -27,6 +27,10 @@
     },
     "db:deploy": {
       "cache": false
+    },
+    "db:push": {
+      "cache": false,
+      "interactive": true
     }
   }
 }
