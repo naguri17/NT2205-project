@@ -62,15 +62,9 @@
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
-          "realm": [
-            "offline_access",
-            "uma_authorization"
-          ],
+          "realm": ["offline_access", "uma_authorization"],
           "client": {
-            "account": [
-              "manage-account",
-              "view-profile"
-            ]
+            "account": ["manage-account", "view-profile"]
           }
         },
         "clientRole": false,
@@ -195,9 +189,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "realm-management": [
-                "query-clients"
-              ]
+              "realm-management": ["query-clients"]
             }
           },
           "clientRole": true,
@@ -307,10 +299,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "realm-management": [
-                "query-users",
-                "query-groups"
-              ]
+              "realm-management": ["query-users", "query-groups"]
             }
           },
           "clientRole": true,
@@ -341,9 +330,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "account": [
-                "manage-account-links"
-              ]
+              "account": ["manage-account-links"]
             }
           },
           "clientRole": true,
@@ -393,9 +380,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "account": [
-                "view-consent"
-              ]
+              "account": ["view-consent"]
             }
           },
           "clientRole": true,
@@ -432,9 +417,7 @@
     "clientRole": false,
     "containerId": "0bab0de7-fa12-4985-8f24-7e7a4fcdbe5a"
   },
-  "requiredCredentials": [
-    "password"
-  ],
+  "requiredCredentials": ["password"],
   "otpPolicyType": "totp",
   "otpPolicyAlgorithm": "HmacSHA1",
   "otpPolicyInitialCounter": 0,
@@ -449,10 +432,7 @@
   ],
   "localizationTexts": {},
   "webAuthnPolicyRpEntityName": "keycloak",
-  "webAuthnPolicySignatureAlgorithms": [
-    "ES256",
-    "RS256"
-  ],
+  "webAuthnPolicySignatureAlgorithms": ["ES256", "RS256"],
   "webAuthnPolicyRpId": "",
   "webAuthnPolicyAttestationConveyancePreference": "not specified",
   "webAuthnPolicyAuthenticatorAttachment": "not specified",
@@ -463,10 +443,7 @@
   "webAuthnPolicyAcceptableAaguids": [],
   "webAuthnPolicyExtraOrigins": [],
   "webAuthnPolicyPasswordlessRpEntityName": "keycloak",
-  "webAuthnPolicyPasswordlessSignatureAlgorithms": [
-    "ES256",
-    "RS256"
-  ],
+  "webAuthnPolicyPasswordlessSignatureAlgorithms": ["ES256", "RS256"],
   "webAuthnPolicyPasswordlessRpId": "",
   "webAuthnPolicyPasswordlessAttestationConveyancePreference": "not specified",
   "webAuthnPolicyPasswordlessAuthenticatorAttachment": "not specified",
@@ -476,22 +453,95 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "webAuthnPolicyPasswordlessExtraOrigins": [],
+  "users": [
+    {
+      "id": "02996e92-6464-4119-b9bb-48d272751d6a",
+      "username": "admin",
+      "firstName": "Lộc",
+      "lastName": "admin",
+      "email": "locdinh.public@gmail.com",
+      "emailVerified": false,
+      "enabled": true,
+      "createdTimestamp": 1764964814227,
+      "totp": false,
+      "credentials": [
+        {
+          "id": "db1ee81c-b562-48d7-baed-1cd50015f07d",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1764964861847,
+          "secretData": "{\"value\":\"T0Zc1g16sHeCEKgg5AhVCPuqe4YTv6STnqH2Dk8QL40=\",\"salt\":\"Q5h9v6eJBhgwGVv3e3/dJg==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-nt2205", "admin"],
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "b5b44ab0-0234-41ce-b7e9-3fc4b5df33be",
+      "username": "lapistia34",
+      "firstName": "Hoàng Lộc",
+      "lastName": "Đinh",
+      "email": "lapistia34@gmail.com",
+      "emailVerified": false,
+      "enabled": true,
+      "createdTimestamp": 1763531379735,
+      "totp": false,
+      "credentials": [
+        {
+          "id": "167721ad-36b7-4c6c-8f94-658c642d06c4",
+          "type": "password",
+          "userLabel": "My password",
+          "createdDate": 1763531478323,
+          "secretData": "{\"value\":\"M+Shs/Fkkj2AcyHcurHs2gZmtWJu94i7/u1J6kmHvSo=\",\"salt\":\"Ms8S8T2YUPlBO+V+JO6GzA==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["default-roles-nt2205", "user"],
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "7f90a674-84a3-4c78-b425-4e3b92f8ea27",
+      "username": "locdh.20@grad.uit.edu.vn",
+      "firstName": "Lộc",
+      "lastName": "Đinh Hoàng",
+      "email": "locdh.20@grad.uit.edu.vn",
+      "emailVerified": false,
+      "enabled": true,
+      "createdTimestamp": 1764229392633,
+      "totp": false,
+      "credentials": [],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "federatedIdentities": [
+        {
+          "identityProvider": "google",
+          "userId": "116645456420835577272",
+          "userName": "locdh.20@grad.uit.edu.vn"
+        }
+      ],
+      "realmRoles": ["default-roles-nt2205"],
+      "notBefore": 0,
+      "groups": []
+    }
+  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
-      "roles": [
-        "offline_access"
-      ]
+      "roles": ["offline_access"]
     }
   ],
   "clientScopeMappings": {
     "account": [
       {
         "client": "account-console",
-        "roles": [
-          "manage-account",
-          "view-groups"
-        ]
+        "roles": ["manage-account", "view-groups"]
       }
     ]
   },
@@ -506,9 +556,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "/realms/NT2205/account/*"
-      ],
+      "redirectUris": ["/realms/NT2205/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -553,9 +601,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "/realms/NT2205/account/*"
-      ],
+      "redirectUris": ["/realms/NT2205/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -698,13 +744,9 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
-      "redirectUris": [
-        "http://localhost:3000/*"
-      ],
-      "webOrigins": [
-        "http://localhost:3000"
-      ],
+      "secret": "l2hbJL5o0N2xFZkSDRMKkZzLJcHwKDJ1",
+      "redirectUris": ["http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:3000"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -798,12 +840,8 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "/admin/NT2205/console/*"
-      ],
-      "webOrigins": [
-        "+"
-      ],
+      "redirectUris": ["/admin/NT2205/console/*"],
+      "webOrigins": ["+"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -1570,9 +1608,7 @@
   "adminTheme": "",
   "emailTheme": "",
   "eventsEnabled": false,
-  "eventsListeners": [
-    "jboss-logging"
-  ],
+  "eventsListeners": ["jboss-logging"],
   "enabledEventTypes": [],
   "adminEventsEnabled": false,
   "adminEventsDetailsEnabled": false,
@@ -1593,7 +1629,7 @@
       "config": {
         "syncMode": "LEGACY",
         "clientSecret": "**********",
-        "clientId": "662247442474-07be60m6ikr3cmnrkoun09nk77o1u4vv.apps.googleusercontent.com"
+        "clientId": "**********"
       }
     }
   ],
@@ -1607,9 +1643,7 @@
         "subType": "anonymous",
         "subComponents": {},
         "config": {
-          "allow-default-scopes": [
-            "true"
-          ]
+          "allow-default-scopes": ["true"]
         }
       },
       {
@@ -1638,9 +1672,7 @@
         "subType": "anonymous",
         "subComponents": {},
         "config": {
-          "max-clients": [
-            "200"
-          ]
+          "max-clients": ["200"]
         }
       },
       {
@@ -1650,9 +1682,7 @@
         "subType": "authenticated",
         "subComponents": {},
         "config": {
-          "allow-default-scopes": [
-            "true"
-          ]
+          "allow-default-scopes": ["true"]
         }
       },
       {
@@ -1697,12 +1727,8 @@
         "subType": "anonymous",
         "subComponents": {},
         "config": {
-          "host-sending-registration-request-must-match": [
-            "true"
-          ],
-          "client-uris-must-match": [
-            "true"
-          ]
+          "host-sending-registration-request-must-match": ["true"],
+          "client-uris-must-match": ["true"]
         }
       }
     ],
@@ -1713,9 +1739,14 @@
         "providerId": "rsa-generated",
         "subComponents": {},
         "config": {
-          "priority": [
-            "100"
-          ]
+          "privateKey": [
+            "MIIEowIBAAKCAQEAu+0uukHJWG12fK+sycgL7H+Og0vlqh9rnmUfLzuKoEbb0SZwXJgqA4xT+v7HJr3KKjrtc95Qd1y1YjX3NEDDamqCRAQ0xRUVB8PA4L/8kiUbDuTvfssZXvam2doVwDJ6VnzQbN59e8vEfe5xSI0dwQQR8Qbe7WRhtL6Z9J3ixYmBdEf6HPODeS8BP2RLVs+7zTDVx0E68iyETFD0Tja5QMz2s++kHL4QlBxbn3zJ+STtmFu9tZh6OIxY1m4A9qBWgSGMjpU1FcbfVCViGwy8XexqAB5iBA6yTQMmQnLosfBVlfv8x3ip9bCNAGbfkc75TqBRfWf/yAp2ClTc8G7cYQIDAQABAoIBABLE5hlZL7RivmZGn3HJxpMYzFGFt4rtt3Bq9hngDwDiAttZRPiig/O1xL95ScevRe1A1G1xo0TAoCcOb8GqxDmxKJCFgQW8DM0pOm7YDfBEv3aV2+ukekS3SsPQWcLH59sSfTiaYhsGp3nSYkMWQQYBk48omgRItc95B+RcDoWfAdviGmxop8UIEkmXVOVoywG9mZNHSHAfpOS7wC6bPHIvJ1kNiSdNkiQ9XPb3oyTLFQBWyepnkZhOB0KLvnRiGH+JOlAsBlcScR80Mqw5CjrxXBsJirL+W2nobQKowH9Q9wWPlEIrnU/Gblt/iyeg4cV/WatHe4lEbw7nE1VZt2cCgYEA3Pu385OMIckAeMhUWeFP9TSSTC76hoEepoCM7BVhKZUMP7Yv1LFBaNXdX3qxRcu+u895pOxHJxmbP+2kaEVhlfvgoBmsO7AI/gVUcajILTvL3KKcrCrUrULLC1jTYENU73ik5OjNSN/q/AwNNQFvET8pTfCT7amMPLf2yCOmcP8CgYEA2bSAXoQe6/oRgBbJSjstbmFe/VQcjfDOd5Ck4jY8jrxA8D3MPUncxbWfNYunCoaaKUf7aT/X+7uOawoIE3TRIQV4O3bpOltTw8sFCioyoO3uIu3b6QYQpOAkZX5e+XCubsHRIEnWju1hW+xHGij20c+hmVvvFYMRWJ3npPcjUp8CgYEA2eh6R316lKIxjej1jL/qacCSdv9oWZQflk5zKCYY7rkkH/tWhSTZfDhQGGPTRSEZjveTW3cG3t6YQdzj31JzXUPIB/fo5965r0uwLngiFMC/UW0kk32UxNl1gVXw8h7TNWVBLN0H+VGc1ThJGbi1PkuLPmj6ZkRnnkRF3KuS6B8CgYBqm86k+jQeQLYjMIVf2XzU6c/XZEIbbAnfWTC1KfQbvapbOxfyB2KaWuddFEc3i1Sg1IQUNVRyDJWgaygrRvBGKGSJUiDCGAj7/0Y3hRSH5BvSdQJUqUirRKvuG6Usp3Zz/GuJUT9FfI9JsXncIKVFd1TeQbvhn+51o9XU3cUpZwKBgEOSbaILhniab6WgFXLttB5PFq0ccFwWiuTtWUC42jJzZIIv39gR7Qw8hz42BQeHAn/IXuebVzgaQKhYMoBrpIGbXCxQcSC62cWHEHbdikY0b+SHCsF2GdvdSwbyNtWnVgziwZwwAgPJ2vYT+6NCGbMlQYnSPUTEWb91laxrD42P"
+          ],
+          "keyUse": ["SIG"],
+          "certificate": [
+            "MIICmzCCAYMCBgGal5j46TANBgkqhkiG9w0BAQsFADARMQ8wDQYDVQQDDAZOVDIyMDUwHhcNMjUxMTE4MTUzMTE2WhcNMzUxMTE4MTUzMjU2WjARMQ8wDQYDVQQDDAZOVDIyMDUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC77S66QclYbXZ8r6zJyAvsf46DS+WqH2ueZR8vO4qgRtvRJnBcmCoDjFP6/scmvcoqOu1z3lB3XLViNfc0QMNqaoJEBDTFFRUHw8Dgv/ySJRsO5O9+yxle9qbZ2hXAMnpWfNBs3n17y8R97nFIjR3BBBHxBt7tZGG0vpn0neLFiYF0R/oc84N5LwE/ZEtWz7vNMNXHQTryLIRMUPRONrlAzPaz76QcvhCUHFuffMn5JO2YW721mHo4jFjWbgD2oFaBIYyOlTUVxt9UJWIbDLxd7GoAHmIEDrJNAyZCcuix8FWV+/zHeKn1sI0AZt+RzvlOoFF9Z//ICnYKVNzwbtxhAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAH42YuGWbzftXwh5ZHVSh1p4+DwoNjNSqHZ7mOmR8rP9Pwgx252+PEWDJpm9rQd1izROnlv87FKF/YGAh87bBxL1/JOctkyc5VtPyYS9GvhDbDp+epSVSxw0+58VTTiNcBjx2nD+5cCpukHOx/+Y9Mz+pL580TQ2tS/HOH8UOjxzSp6DM9f9+DxzOybFJNomTs3IQBQtFBeSB6Nb3gphEF+QzNVKFf7vDPOpB+ANU+EJSLq4jKGZ1TH3GWPGBa2fkzxdDLqIXySnBeLnsCoGD7SPfKspEm+Qx0ulU+deqCMrl+mAc3iyMgrIp8a3pJUvm+y3u74WbcujagR/Kz+SZPg="
+          ],
+          "priority": ["100"]
         }
       },
       {
@@ -1724,9 +1755,9 @@
         "providerId": "aes-generated",
         "subComponents": {},
         "config": {
-          "priority": [
-            "100"
-          ]
+          "kid": ["dce70444-2944-4aeb-84c1-1e242e9f8cf9"],
+          "secret": ["tR-YHEeAMRd9dkANb0BXeA"],
+          "priority": ["100"]
         }
       },
       {
@@ -1735,12 +1766,12 @@
         "providerId": "hmac-generated",
         "subComponents": {},
         "config": {
-          "priority": [
-            "100"
+          "kid": ["f2a8a8d0-a077-4688-9661-1222251910f0"],
+          "secret": [
+            "H-vh3A1efCy_LQQb15T4W05gzxow3nC_2Mhx95X9VJD9Cj9Ajvd27Y5ZBHctcq8O7OksEyUHX0y4-5IStTeEcDxiXzVsa0kphbH0o0tVbnUMcPrfbPfb7S-MAa7Dq_rngTJVwLXJAyLcTyjw3jAP33zMImLmnmvrMDC40cZYGkI"
           ],
-          "algorithm": [
-            "HS512"
-          ]
+          "priority": ["100"],
+          "algorithm": ["HS512"]
         }
       },
       {
@@ -1749,12 +1780,15 @@
         "providerId": "rsa-enc-generated",
         "subComponents": {},
         "config": {
-          "priority": [
-            "100"
+          "privateKey": [
+            "MIIEpQIBAAKCAQEAvgvKjhJEpE9YFbMP6YD7ZyIly+zhJr90ohAKdsHUwdk5GIKDe+NYwelq62y1VzXQAx8QaBZ7UqkzU1cOLJoo5KTwB0r/Qv3pzkwjPiuyidsN25q6k+DVFZKDGn+HpGdfAsAw7mNIbO050NUT4RFDnjzQI/HN7qxwaFPuO0TPB7UCTx3HV1RjbCEMbWwWwZO6CT23hdywNirc8523KxX9vZun7GlND4rAsrr5Pf6/+DPGUqCJm9BEPejOeVW3TB7FfIvtbLNTm51Acc+2h72eyRWiG1ATiZP17IuYn8uj8x6YL4iwzY3WTnkFL18lonczv5ABiJZQqtFG5se7lYNWpwIDAQABAoIBACKmyLyF1TE2bGOsfgq/41cHMWgQ3W6wuwXvsdC8f9wGjPQMnAfDSMQ2mLGrZRctLyvahqXL75l/U2XvOhzk0O77qe5SfN+Mp4xfco+b7RZYtBqmCD39YSzpRXFX7nYKCRdZzrIwtRxzVrbemxzPBoq8IOFk7f0GQQqsvwPchHktdfJpYTgC2tyabeyHKNHm5jFYuIfIt9Ql5VwnzWNmpfxtcDPI2gOiQYye2/uC6EjXAWVha/S+pNi5lds0Ksi5PahBuKOY8V8+eObylIuqga76y9k9RHgsyqhgolRcgIJ8E6n2i8ahmQ/pQdJcQ3g7+NnJ6bv9SxL5KQXXgYhdYIkCgYEA4r9cd4Gdr1fsA8krVjpPts6a+qCevN9Iz59GtWLRzzAytABRhaSaH3cUgadXCTPVvpP8IF4k4KHarK8LVLK+k9NX+i9GgSkBtw+gROUkK/qeK//katdVl+FMplMRuVUSSCP+r18Tn9dULKBDEhPmJJUog9Hp+ZFdrU3cUIU9AE8CgYEA1pBQ227ANR0PPfytNjTQC5Q1i4OkV3nEMANSzpjjMztWlFNqz128v7ilx4W2JaOYB4AyWGCF+1KmKXxZ9dWbfG3R0nSGSNcxtlIurvnd69FAi8E5pDAXH4QOskPWzw5sVF8sAUGhSPmgqHM25vmDkkLXwqgNE57URgj0AEJwlikCgYEAyfb036Vd1H6VxFF8/lL2CbhBJpfGjCi96+DM1GduxgMCRn46HrWcagZhB5ML3TCEZDnfytzQMB06b7GCgDCtu3H13Owa+pSR6IJMmNEYxOt3020cAWZH4P5WjZdUJCX4ILWe9onTKv5bBVzCIOoEhfUtnyxsIVUvgVvmrvneedUCgYEAnGH27NgdsxiJAW7md/mqIKZXGGZMI42WVkA13GpGPhLjmZvq31S8uyfDfFaSWYCQz/a5uvwu6uxkOxxtHOYhO2F3amKPdQuTKgVgDRwEiVmsJ7AfaPG8CLZhV8BmEee7QQtUsV26RcvbMqs2usXlBXc+dpuxXDmJEbp4zK+gC3ECgYEAkiU46KEnKZUsvsKFDnGBqi5Z+sef+UsVKaufXPJ9CukFLRoDTdhRgt5WgZ2Faw3Xl7hRUKGtW8Gr2h8ldLXUAxriBAdAb/7KVN9AJYlpWcFEh86BIh6VST9FuTcIKTZOiZtIoiIcJYJhGhYuZsPKpJqzP7nc0xbNEaQkTMTskyM="
           ],
-          "algorithm": [
-            "RSA-OAEP"
-          ]
+          "keyUse": ["ENC"],
+          "certificate": [
+            "MIICmzCCAYMCBgGal5j5njANBgkqhkiG9w0BAQsFADARMQ8wDQYDVQQDDAZOVDIyMDUwHhcNMjUxMTE4MTUzMTE2WhcNMzUxMTE4MTUzMjU2WjARMQ8wDQYDVQQDDAZOVDIyMDUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+C8qOEkSkT1gVsw/pgPtnIiXL7OEmv3SiEAp2wdTB2TkYgoN741jB6WrrbLVXNdADHxBoFntSqTNTVw4smijkpPAHSv9C/enOTCM+K7KJ2w3bmrqT4NUVkoMaf4ekZ18CwDDuY0hs7TnQ1RPhEUOePNAj8c3urHBoU+47RM8HtQJPHcdXVGNsIQxtbBbBk7oJPbeF3LA2KtzznbcrFf29m6fsaU0PisCyuvk9/r/4M8ZSoImb0EQ96M55VbdMHsV8i+1ss1ObnUBxz7aHvZ7JFaIbUBOJk/Xsi5ify6PzHpgviLDNjdZOeQUvXyWidzO/kAGIllCq0Ubmx7uVg1anAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAJVWMt6eoXJbREj6f1S+YY6lsnvj/9P931qgwpxp/gUMrzoHK/GwKz01MXLI9GYUgCOb1iQpgU0OdS2Kot2mXacfFQsu7/HFOXjFhAD/7BNOLEq36U2rSVqCYBgkyNNDBYJ6AJPHsUPUSnI948hHV6tbVfWGiggXJyGVg9GThf/HQu1kRqulbKyjb6vWypylaTvxS+1UlX/oy07Wonr66eKozgTkJTSQ4e40Fy4QCGZiwD0Mff70OWE87IkT+3pOWmoATDfSsKGvcbRHwAipr12SfeHHt1w3NytLaXh+ij4XKTyLXyjq4w1raC+gnue9IsAlTxrAebQWBDmO73enANo="
+          ],
+          "priority": ["100"],
+          "algorithm": ["RSA-OAEP"]
         }
       }
     ]
