@@ -12,7 +12,8 @@
     "hono": "^4.10.5",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.2.0",
-    "stripe": "^20.0.0"
+    "stripe": "^20.0.0",
+    "@repo/kafka": "workspace:*"
   },
   "devDependencies": {
     "@repo/types": "workspace:*",

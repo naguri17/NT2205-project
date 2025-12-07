@@ -3,6 +3,7 @@ import authPlugin from "./plugins/authPlugin.js";
 import cors from "@fastify/cors";
 import { connectOrderDB } from "@repo/order-db";
 import { orderRoute } from "./routes/order.js";
+import { consumer, producer } from "./utils/kafka.js";
 
 const fastify = Fastify();
 
@@ -24,19 +25,16 @@ fastify.get(
   }
 );
 
-fastify.get("/health", async (request, reply) => {
-  return reply.status(200).send({
-    status: "ok",
-    uptime: process.uptime(),
-    timeStamp: Date.now(),
-  });
-});
-
 fastify.register(orderRoute);
 
 const start = async () => {
   try {
-    await connectOrderDB();
+    Promise.all([
+      await connectOrderDB(),
+      await producer.connect(),
+      await consumer.connect(),
+    ]);
+
     await fastify.listen({ port: 8001 });
     console.log("Order service is running on port 8001");
   } catch (err) {
