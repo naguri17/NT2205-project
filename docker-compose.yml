@@ -20,7 +20,7 @@ services:
 
   # 2. Identity: Keycloak
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0
+    image: quay.io/keycloak/keycloak:26.4.4
     container_name: nt2205-keycloak
     command: start-dev --import-realm
     environment:
@@ -30,7 +30,7 @@ services:
       - "8080:8080"
     volumes:
       # File này phải có trên Git để đồng bộ cấu hình Realm
-      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./docker/keycloak/realm-final.json:/opt/keycloak/data/import/realm-export.json
 
   # 3. Message Queue: Kafka (Chế độ Kraft - Không cần Zookeeper)
   kafka:

@@ -38,3 +38,5 @@ yarn-error.log*
 *.pem
 
 setup-env.js
+# Ignore generated Keycloak config
+docker/keycloak/realm-final.json
