@@ -418,6 +418,9 @@ importers:
 
   packages/types:
     dependencies:
+      '@repo/order-db':
+        specifier: workspace:*
+        version: link:../order-db
       '@repo/product-db':
         specifier: workspace:*
         version: link:../product-db

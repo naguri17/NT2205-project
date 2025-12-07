@@ -34,7 +34,7 @@ export const createProduct = async (req: Request, res: Response) => {
     price: product.price,
   };
 
-  producer.send("product.created", { value: stripeProduct });
+  await producer.send("product.created", stripeProduct);
   res.status(201).json(product);
 };
 
@@ -91,16 +91,24 @@ export const getProducts = async (req: Request, res: Response) => {
     }
   })();
 
-  const products = await prisma.product.findMany({
-    where: {
-      category: {
-        slug: category as string,
-      },
-      name: {
-        contains: search as string,
+  const whereCondition: Prisma.ProductWhereInput = {
+    name: {
+      contains: (search as string) || "",
+      mode: "insensitive",
+    },
+  };
+
+  if (category && category !== "all") {
+    whereCondition.category = {
+      slug: {
+        equals: category as string,
         mode: "insensitive",
       },
-    },
+    };
+  }
+
+  const products = await prisma.product.findMany({
+    where: whereCondition,
     orderBy,
     take: limit ? Number(limit) : undefined,
   });
