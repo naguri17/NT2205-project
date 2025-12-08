@@ -109,8 +109,8 @@ services:
       KAFKA_CLUSTERS_0_NAME: local-cluster
       # Trỏ nội bộ tới các container broker
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092
-      KAFKA_CLUSTERS_0_READONLY: false
-      KAFKA_CLUSTERS_0_TOPIC_AUTO_CREATE: true
+      KAFKA_CLUSTERS_0_READONLY: "false"
+      KAFKA_CLUSTERS_0_TOPIC_AUTO_CREATE: "true"
     depends_on:
       - kafka-broker-1
       - kafka-broker-2
