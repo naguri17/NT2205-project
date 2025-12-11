@@ -1,0 +1,103 @@
+_format_version: "3.0"
+_transform: true
+
+plugins:
+  # Expose /metrics for Prometheus scraping (restrict via network/firewall)
+  - name: prometheus
+
+services:
+  - name: product-service
+    url: http://host.docker.internal:8000/products
+    routes:
+      - name: product-route
+        paths:
+          - /api/products
+        strip_path: true
+        methods: [GET, POST, PUT, PATCH, DELETE]
+        plugins:
+          - name: cors
+            config:
+              origins: [http://localhost:3000, http://localhost:3001]
+              methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+              headers: [Authorization, Content-Type]
+              credentials: true
+          - name: rate-limiting
+            config:
+              minute: 100
+              policy: local
+
+  - name: category-service
+    url: http://host.docker.internal:8000/categories
+    routes:
+      - name: category-route
+        paths:
+          - /api/categories
+        strip_path: true
+        methods: [GET, POST, PUT, PATCH, DELETE]
+        plugins:
+          - name: cors
+            config:
+              origins: [http://localhost:3000, http://localhost:3001]
+              methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+              headers: [Authorization, Content-Type]
+              credentials: true
+          - name: rate-limiting
+            config:
+              minute: 100
+              policy: local
+
+  - name: order-service
+    url: http://host.docker.internal:8001
+    routes:
+      - name: order-route
+        paths:
+          - /api/orders
+        strip_path: true
+        methods: [GET, POST, PUT, PATCH, DELETE]
+        plugins:
+          - name: cors
+            config:
+              origins: [http://localhost:3000, http://localhost:3001]
+              methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+              headers: [Authorization, Content-Type]
+              credentials: true
+          - name: rate-limiting
+            config:
+              minute: 100
+              policy: local
+
+  - name: payment-service
+    url: http://host.docker.internal:8002
+    routes:
+      - name: payment-route
+        paths:
+          - /api/payments
+        strip_path: true
+        methods: [GET, POST, PUT, PATCH, DELETE]
+        plugins:
+          - name: cors
+            config:
+              origins: [http://localhost:3000, http://localhost:3001]
+              methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+              headers: [Authorization, Content-Type]
+              credentials: true
+          - name: rate-limiting
+            config:
+              minute: 100
+              policy: local
+
+  - name: gateway-health
+    url: http://mockbin.org/request
+    routes:
+      - name: gateway-health-route
+        paths:
+          - /health
+        strip_path: true
+        methods: [GET]
+        plugins:
+          - name: cors
+            config:
+              origins: ["*"]
+              methods: [GET, OPTIONS]
+              headers: [Content-Type]
+              credentials: false

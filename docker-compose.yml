@@ -118,6 +118,37 @@ services:
     networks:
       - nt2205-network
 
+  # =========================================
+  # 4. API GATEWAY: Kong (DB-less, OIDC with Keycloak)
+  # =========================================
+  kong:
+    # Dùng tag ubuntu (tag alpine không tồn tại cho bản 3.8.0.0)
+    image: kong/kong-gateway:3.8.0.0
+    container_name: nt2205-kong
+    depends_on:
+      - keycloak
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yaml
+      KONG_LOG_LEVEL: info
+      # Proxy exposed to frontend/backends
+      KONG_PROXY_LISTEN: 0.0.0.0:9000
+      # Restrict admin API to localhost only
+      KONG_ADMIN_LISTEN: 127.0.0.1:9001
+      # Enable bundled plugins (openid-connect cần bản enterprise, đã bỏ trong config)
+      KONG_PLUGINS: bundled
+    volumes:
+      - ./kong/kong.yaml:/kong/kong.yaml:ro
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - ./kong/.env.kong
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - nt2205-network
+
 volumes:
   postgres_data:
 

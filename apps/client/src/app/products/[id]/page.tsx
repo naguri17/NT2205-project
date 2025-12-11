@@ -24,9 +24,11 @@ import Image from "next/image";
 // };
 
 const fetchProduct = async (id: string) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products/${id}`
-  );
+  const base = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "";
+  const url = new URL(base);
+  url.pathname = `${url.pathname.replace(/\/$/, "")}/${id}`;
+
+  const res = await fetch(url.toString());
   const data: ProductType = await res.json();
   return data;
 };

@@ -15,11 +15,18 @@ const fetchData = async ({
   search?: string;
   params: "homepage" | "products";
 }) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?${category ? `category=${category}` : ""}${search ? `&search=${search}` : ""}&sort=${sort || "newest"}${params === "homepage" ? "&limit=8" : ""}`
-  );
-  const data: ProductType[] = await res.json();
-  return data;
+  const base = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "";
+  const url = new URL(base);
+
+  if (category) url.searchParams.set("category", category);
+  if (search) url.searchParams.set("search", search);
+  url.searchParams.set("sort", sort || "newest");
+  if (params === "homepage") url.searchParams.set("limit", "8");
+
+  const res = await fetch(url.toString());
+  const data = await res.json();
+
+  return Array.isArray(data) ? (data as ProductType[]) : [];
 };
 
 const ProductList = async ({
