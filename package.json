@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "setup:env": "node setup-env.js",
-    "setup:infra": "docker-compose up -d",
+    "setup:infra": "docker compose up -d",
     "setup:db": "turbo run db:generate db:push --filter=@repo/product-db",
     "setup:all": "pnpm install && pnpm setup:env && pnpm setup:infra && echo '⏳ Chờ DB khởi động...' && node -e \"setTimeout(() => {}, 5000)\" && pnpm setup:db"
   },
