@@ -1,6 +1,7 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { handleFederatedLogout } from "@/lib/auth";
 
 export default function UnauthorizedPage() {
   const { data } = useSession();
@@ -14,10 +15,7 @@ export default function UnauthorizedPage() {
       <p className="text-muted-foreground">
         Tài khoản của bạn không có quyền truy cập vào Admin Dashboard.
       </p>
-      <Button
-        onClick={() => signOut({ callbackUrl: "/api/auth/federated-logout" })}
-        variant="destructive"
-      >
+      <Button onClick={() => handleFederatedLogout(data)} variant="destructive">
         Đăng xuất / Đổi tài khoản
       </Button>
     </div>

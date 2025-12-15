@@ -1,7 +1,8 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, Session } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { jwtDecode } from "jwt-decode";
 import { Buffer } from "buffer";
+import { signOut } from "next-auth/react";
 
 async function isTokenActive(accessToken: string): Promise<boolean> {
   const url = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token/introspect`;
@@ -76,4 +77,22 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
+};
+
+export const handleFederatedLogout = async (session: Session | null) => {
+  const idToken = session?.idToken;
+
+  await signOut({ redirect: false });
+
+  if (idToken) {
+    const issuer = process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER;
+
+    const postLogoutRedirectUri = window.location.origin + "/auth/signin";
+
+    const logoutUrl = `${issuer}/protocol/openid-connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
+
+    window.location.href = logoutUrl;
+  } else {
+    window.location.href = "/auth/signin";
+  }
 };
