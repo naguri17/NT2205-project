@@ -16,7 +16,7 @@ const fetchData = async ({
   params: "homepage" | "products";
 }) => {
   const base = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "";
-  const url = new URL(base);
+  const url = new URL("/products", base);
 
   if (category) url.searchParams.set("category", category);
   if (search) url.searchParams.set("search", search);
