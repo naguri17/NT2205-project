@@ -5,7 +5,7 @@ import { DataTable } from "./data-table";
 const getData = async (): Promise<ProductsType> => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products`
+      `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}`
     );
     const data = await res.json();
     return data;
