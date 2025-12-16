@@ -25,6 +25,10 @@ import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const keycloakAdminBase =
+  process.env.KEYCLOAK_ADMIN_URL ||
+  "http://127.0.0.1:8080/admin/realms/NT2205";
+
 const getUserDetails = async (
   token: string | undefined,
   userId: string
@@ -34,7 +38,7 @@ const getUserDetails = async (
   }
 
   try {
-    const KEYCLOAK_DETAIL_URL = `http://127.0.0.1:8080/admin/realms/NT2205/users/${userId}`;
+    const KEYCLOAK_DETAIL_URL = `${keycloakAdminBase}/users/${userId}`;
 
     const res = await fetch(KEYCLOAK_DETAIL_URL, {
       headers: {

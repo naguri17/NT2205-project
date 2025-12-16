@@ -8,8 +8,12 @@ const getData = async (token: string | undefined): Promise<any> => {
     return { data: [], totalCount: 0 };
   }
 
+  const keycloakAdminBase =
+    process.env.KEYCLOAK_ADMIN_URL ||
+    "http://127.0.0.1:8080/admin/realms/NT2205";
+
   try {
-    const res = await fetch("http://127.0.0.1:8080/admin/realms/NT2205/users", {
+    const res = await fetch(`${keycloakAdminBase}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
