@@ -8,8 +8,6 @@ export function ProfileButton() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
-  console.log(session);
-
   useEffect(() => {
     function onDoc(e: MouseEvent) {
       if (!ref.current) return;

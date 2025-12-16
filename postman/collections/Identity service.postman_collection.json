@@ -2,8 +2,7 @@
   "info": {
     "_postman_id": "5680661f-837a-4fd2-a43d-2aaf1245180a",
     "name": "Identity service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "22868683"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
@@ -65,7 +64,7 @@
             },
             {
               "key": "username",
-              "value": "lapistia34",
+              "value": "admin",
               "type": "text"
             },
             {
@@ -91,6 +90,49 @@
             "protocol",
             "openid-connect",
             "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User List",
+      "id": "88666547-3b69-4618-b8f9-9180c6858963",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8080/admin/realms/NT2205/users?max=10",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8080",
+          "path": [
+            "admin",
+            "realms",
+            "NT2205",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "max",
+              "value": "10",
+              "type": "text"
+            }
           ]
         }
       },

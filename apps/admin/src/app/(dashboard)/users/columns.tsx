@@ -19,7 +19,7 @@ import Link from "next/link";
 export type User = {
   id: string;
   avatar: string;
-  fullName: string;
+  username: string;
   email: string;
   status: "active" | "inactive";
 };
@@ -48,20 +48,30 @@ export const columns: ColumnDef<User>[] = [
     header: "Avatar",
     cell: ({ row }) => {
       const user = row.original;
+      const initial = user.username
+        ? user.username.charAt(0).toUpperCase()
+        : "U";
+
       return (
-        <div className="w-9 h-9 relative">
-          <Image
-            src={user.avatar}
-            alt={user.fullName}
-            fill
-            className="rounded-full object-cover"
-          />
+        <div className="w-9 h-9 relative rounded-full overflow-hidden">
+          {user.avatar ? (
+            <Image
+              src={user.avatar}
+              alt={user.username}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
+              {initial}
+            </div>
+          )}
         </div>
       );
     },
   },
   {
-    accessorKey: "fullName",
+    accessorKey: "username",
     header: "User",
   },
   {
@@ -82,7 +92,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status");
+      const status = row.getValue("status") || "active";
 
       return (
         <div

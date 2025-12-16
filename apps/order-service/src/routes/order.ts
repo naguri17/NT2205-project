@@ -21,7 +21,9 @@ export const orderRoute = async (fastify: FastifyInstance) => {
       ],
     },
     async (request, reply) => {
-      return reply.send({ message: "All orders (Admin view)" });
+      const { limit } = request.query as { limit: number };
+      const orders = await Order.find().limit(limit).sort({ createdAt: -1 });
+      return reply.send(orders);
     }
   );
 };

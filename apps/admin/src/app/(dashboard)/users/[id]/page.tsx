@@ -1,3 +1,4 @@
+"use client";
 import CardList from "@/components/CardList";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,8 +21,73 @@ import { Button } from "@/components/ui/button";
 import EditUser from "@/components/EditUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AppLineChart from "@/components/AppLineChart";
+import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+const getUserDetails = async (
+  token: string | undefined,
+  userId: string
+): Promise<any> => {
+  if (!token || !userId) {
+    return null;
+  }
+
+  try {
+    const KEYCLOAK_DETAIL_URL = `http://127.0.0.1:8080/admin/realms/NT2205/users/${userId}`;
+
+    const res = await fetch(KEYCLOAK_DETAIL_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error(
+        `Keycloak Detail API Error: ${res.status} ${res.statusText}`
+      );
+      return null;
+    }
+
+    const userData = await res.json();
+    return userData;
+  } catch (err) {
+    console.error("Error fetching user details:", err);
+    return null;
+  }
+};
 
 const SingleUserPage = () => {
+  const { data: session } = useSession();
+  const accessToken = session?.accessToken as string | undefined;
+  const params = useParams();
+  const userId = params?.id as string;
+  const [userDetail, setUserDetail] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (accessToken && userId) {
+      const fetchUser = async () => {
+        setLoading(true);
+        const user = await getUserDetails(accessToken, userId);
+        setUserDetail(user);
+        setLoading(false);
+      };
+      fetchUser();
+    } else if (!accessToken) {
+      setLoading(false);
+    }
+  }, [accessToken, userId]);
+
+  if (loading) {
+    return (
+      <div className="text-center p-8">
+        <p>Đang tải thông tin người dùng...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="">
       <Breadcrumb>
@@ -142,13 +208,15 @@ const SingleUserPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-bold">Full name:</span>
-                <span>John Doe</span>
+                <span>
+                  {userDetail?.firstName} {userDetail?.lastName}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-bold">Email:</span>
-                <span>john.doe@gmail.com</span>
+                <span>{userDetail?.email}</span>
               </div>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <span className="font-bold">Phone:</span>
                 <span>+1 234 5678</span>
               </div>
@@ -159,16 +227,15 @@ const SingleUserPage = () => {
               <div className="flex items-center gap-2">
                 <span className="font-bold">City:</span>
                 <span>New York</span>
-              </div>
+              </div> */}
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
+            {/* <p className="text-sm text-muted-foreground mt-4">
               Joined on 2025.01.01
-            </p>
+            </p> */}
           </div>
         </div>
         {/* RIGHT */}
         <div className="w-full xl:w-2/3 space-y-6">
-          
           {/* CHART CONTAINER */}
           <div className="bg-primary-foreground p-4 rounded-lg">
             <h1 className="text-xl font-semibold">User Activity</h1>
