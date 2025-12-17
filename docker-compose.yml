@@ -65,12 +65,12 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_KRAFT_CLUSTER_ID: 7Dvn0OLMQo-bg4qmCmflVg
       ALLOW_PLAINTEXT_LISTENER: "yes"
-    # logging:
-    #   driver: awslogs
-    #   options:
-    #     awslogs-region: ap-southeast-2
-    #     awslogs-group: /nt2205/prod/docker
-    #     awslogs-stream: kafka-broker-1
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-southeast-2
+        awslogs-group: /nt2205/prod/docker
+        awslogs-stream: kafka-broker-1
     ports:
       - "9094:9094"
     networks:
