@@ -11,6 +11,12 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: products
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: postgres
     ports:
       - "5432:5432"
     volumes:
@@ -28,6 +34,12 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: keycloak
     ports:
       - "8080:8080"
     volumes:
@@ -53,6 +65,12 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_KRAFT_CLUSTER_ID: 7Dvn0OLMQo-bg4qmCmflVg
       ALLOW_PLAINTEXT_LISTENER: "yes"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: kafka-broker-1
     ports:
       - "9094:9094"
     networks:
@@ -74,6 +92,12 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_KRAFT_CLUSTER_ID: 7Dvn0OLMQo-bg4qmCmflVg
       ALLOW_PLAINTEXT_LISTENER: "yes"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: kafka-broker-2
     ports:
       - "9095:9095"
     networks:
@@ -95,6 +119,12 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_KRAFT_CLUSTER_ID: 7Dvn0OLMQo-bg4qmCmflVg
       ALLOW_PLAINTEXT_LISTENER: "yes"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: kafka-broker-3
     ports:
       - "9096:9096"
     networks:
@@ -111,6 +141,12 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092
       KAFKA_CLUSTERS_0_READONLY: "false"
       KAFKA_CLUSTERS_0_TOPIC_AUTO_CREATE: "true"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: kafka-ui
     depends_on:
       - kafka-broker-1
       - kafka-broker-2
@@ -137,6 +173,12 @@ services:
       KONG_ADMIN_LISTEN: 127.0.0.1:9001
       # Enable bundled plugins (openid-connect cần bản enterprise, đã bỏ trong config)
       KONG_PLUGINS: bundled
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: ap-southeast-2
+    #     awslogs-group: /nt2205/prod/docker
+    #     awslogs-stream: kong
     volumes:
       - ./kong/kong.yaml:/kong/kong.yaml:ro
     ports:

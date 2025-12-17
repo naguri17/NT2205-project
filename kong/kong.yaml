@@ -133,3 +133,22 @@ services:
               methods: [GET, OPTIONS]
               headers: [Content-Type]
               credentials: false
+
+  # Keycloak Identity Provider
+  - name: keycloak
+    url: http://keycloak:8080
+    routes:
+      - name: keycloak-route
+        hosts:
+          - auth.lapisweb.online
+        paths:
+          - /
+        strip_path: false
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+        plugins:
+          - name: cors
+            config:
+              origins: ["*"]
+              methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+              headers: [Authorization, Content-Type]
+              credentials: true

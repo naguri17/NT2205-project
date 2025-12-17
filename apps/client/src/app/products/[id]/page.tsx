@@ -24,7 +24,7 @@ import Image from "next/image";
 // };
 
 const fetchProduct = async (id: string) => {
-  const base = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "";
+  const base = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL!;
   const url = new URL(base);
   url.pathname = `${url.pathname.replace(/\/$/, "")}/${id}`;
 
