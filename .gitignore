@@ -50,3 +50,5 @@ docker/nginx/ssl/*.srl
 
 # Production env files
 .env.production
+
+setup-env.js
