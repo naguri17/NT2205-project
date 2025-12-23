@@ -9,9 +9,16 @@ import { runKafkaSubscriptions } from "./utils/subscription.js";
 const fastify = Fastify();
 
 fastify.register(authPlugin);
+// CORS Configuration - supports both local and production
 fastify.register(cors, {
-  origin: ["http://localhost:3000", "http://localhost:3001"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://app.lapisweb.online",
+    "https://admin.lapisweb.online",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  credentials: true,
 });
 
 fastify.get(

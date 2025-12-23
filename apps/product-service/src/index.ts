@@ -8,9 +8,26 @@ import { consumer, producer } from "./utils/kafka.js";
 const app = express();
 
 app.use(express.json());
+
+// CORS Configuration - supports both local and production
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://app.lapisweb.online",
+  "https://admin.lapisweb.online",
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
   })
 );
 

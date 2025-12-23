@@ -37,6 +37,16 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-setup-env.js
 # Ignore generated Keycloak config
 docker/keycloak/realm-final.json
+
+# SSL Certificates (chứa private keys)
+docker/nginx/ssl/*.key
+docker/nginx/ssl/*.crt
+docker/nginx/ssl/*.csr
+docker/nginx/ssl/*.cnf
+docker/nginx/ssl/*.ext
+docker/nginx/ssl/*.srl
+
+# Production env files
+.env.production

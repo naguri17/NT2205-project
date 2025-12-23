@@ -8,10 +8,17 @@ import { consumer, producer } from "./utils/kafka.js";
 import { runKafkaSubscriptions } from "./utils/subscription.js";
 
 const app = new Hono();
+// CORS Configuration - supports both local and production
 app.use(
   "/*",
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://app.lapisweb.online",
+      "https://admin.lapisweb.online",
+    ],
+    credentials: true,
   })
 );
 

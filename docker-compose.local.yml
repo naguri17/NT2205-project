@@ -1,0 +1,43 @@
+# =============================================
+# LOCAL DEVELOPMENT OVERRIDE
+# =============================================
+# Sử dụng: docker compose -f docker-compose.yml -f docker-compose.local.yml up -d
+
+services:
+  # =========================================
+  # Keycloak - Dev mode for local development
+  # =========================================
+  keycloak:
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Không cần FRONTEND_URL ở local
+    # Logging mặc định (json-file) cho local
+
+  # =========================================
+  # Postgres - Default logging
+  # =========================================
+  postgres:
+    # Không có awslogs, dùng default json-file driver
+
+  # =========================================
+  # Kafka brokers - Default logging
+  # =========================================
+  kafka-broker-1:
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,EXTERNAL://localhost:9094
+
+  kafka-broker-2:
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092,EXTERNAL://localhost:9095
+
+  kafka-broker-3:
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:9092,EXTERNAL://localhost:9096
+
+  kafka-ui:
+    # Default logging
+
+  kong:
+    # Default logging

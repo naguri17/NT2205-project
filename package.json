@@ -9,9 +9,15 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "setup:env": "node setup-env.js",
-    "setup:infra": "docker compose up -d",
     "setup:db": "turbo run db:generate db:push --filter=@repo/product-db",
-    "setup:all": "pnpm install && pnpm setup:env && pnpm setup:infra && echo '⏳ Chờ DB khởi động...' && node -e \"setTimeout(() => {}, 5000)\" && pnpm setup:db"
+    "setup:ssl": "bash scripts/generate-ssl.sh",
+    "docker:local": "docker compose -f docker-compose.yml -f docker-compose.local.yml up -d",
+    "docker:local:down": "docker compose -f docker-compose.yml -f docker-compose.local.yml down",
+    "docker:prod": "docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up -d",
+    "docker:prod:down": "docker compose -f docker-compose.yml -f docker-compose.prod.yml down",
+    "docker:logs": "docker compose logs -f",
+    "setup:local": "pnpm install && pnpm setup:env && pnpm docker:local && echo '⏳ Chờ DB khởi động...' && sleep 5 && pnpm setup:db",
+    "setup:prod": "pnpm install && pnpm setup:env && pnpm setup:ssl && pnpm docker:prod && echo '⏳ Chờ services khởi động...' && sleep 10 && pnpm setup:db"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

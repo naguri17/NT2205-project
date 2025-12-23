@@ -2,10 +2,13 @@ _format_version: "3.0"
 _transform: true
 
 plugins:
-  # Expose /metrics for Prometheus scraping (restrict via network/firewall)
+  # Expose /metrics for Prometheus scraping
   - name: prometheus
 
 services:
+  # =========================================
+  # PRODUCT SERVICE
+  # =========================================
   - name: product-service
     url: http://host.docker.internal:8000/products
     routes:
@@ -13,27 +16,29 @@ services:
         paths:
           - /api/products
         strip_path: true
-        methods: [GET, POST, PUT, PATCH, DELETE]
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
         plugins:
           - name: cors
             config:
               origins:
-                [
-                  http://localhost:3000,
-                  http://localhost:3001,
-                  http://app.lapisweb.online,
-                  http://admin.lapisweb.online,
-                  https://app.lapisweb.online,
-                  https://admin.lapisweb.online,
-                ]
+                - http://localhost:3000
+                - http://localhost:3001
+                - http://app.lapisweb.online
+                - http://admin.lapisweb.online
+                - https://app.lapisweb.online
+                - https://admin.lapisweb.online
               methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
-              headers: [Authorization, Content-Type]
+              headers: [Authorization, Content-Type, Accept]
               credentials: true
+              max_age: 3600
           - name: rate-limiting
             config:
               minute: 100
               policy: local
 
+  # =========================================
+  # CATEGORY SERVICE
+  # =========================================
   - name: category-service
     url: http://host.docker.internal:8000/categories
     routes:
@@ -41,27 +46,29 @@ services:
         paths:
           - /api/categories
         strip_path: true
-        methods: [GET, POST, PUT, PATCH, DELETE]
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
         plugins:
           - name: cors
             config:
               origins:
-                [
-                  http://localhost:3000,
-                  http://localhost:3001,
-                  http://app.lapisweb.online,
-                  http://admin.lapisweb.online,
-                  https://app.lapisweb.online,
-                  https://admin.lapisweb.online,
-                ]
+                - http://localhost:3000
+                - http://localhost:3001
+                - http://app.lapisweb.online
+                - http://admin.lapisweb.online
+                - https://app.lapisweb.online
+                - https://admin.lapisweb.online
               methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
-              headers: [Authorization, Content-Type]
+              headers: [Authorization, Content-Type, Accept]
               credentials: true
+              max_age: 3600
           - name: rate-limiting
             config:
               minute: 100
               policy: local
 
+  # =========================================
+  # ORDER SERVICE
+  # =========================================
   - name: order-service
     url: http://host.docker.internal:8001
     routes:
@@ -69,27 +76,29 @@ services:
         paths:
           - /api/orders
         strip_path: true
-        methods: [GET, POST, PUT, PATCH, DELETE]
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
         plugins:
           - name: cors
             config:
               origins:
-                [
-                  http://localhost:3000,
-                  http://localhost:3001,
-                  http://app.lapisweb.online,
-                  http://admin.lapisweb.online,
-                  https://app.lapisweb.online,
-                  https://admin.lapisweb.online,
-                ]
+                - http://localhost:3000
+                - http://localhost:3001
+                - http://app.lapisweb.online
+                - http://admin.lapisweb.online
+                - https://app.lapisweb.online
+                - https://admin.lapisweb.online
               methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
-              headers: [Authorization, Content-Type]
+              headers: [Authorization, Content-Type, Accept]
               credentials: true
+              max_age: 3600
           - name: rate-limiting
             config:
               minute: 100
               policy: local
 
+  # =========================================
+  # PAYMENT SERVICE
+  # =========================================
   - name: payment-service
     url: http://host.docker.internal:8002
     routes:
@@ -97,27 +106,29 @@ services:
         paths:
           - /api/payments
         strip_path: true
-        methods: [GET, POST, PUT, PATCH, DELETE]
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
         plugins:
           - name: cors
             config:
               origins:
-                [
-                  http://localhost:3000,
-                  http://localhost:3001,
-                  http://app.lapisweb.online,
-                  http://admin.lapisweb.online,
-                  https://app.lapisweb.online,
-                  https://admin.lapisweb.online,
-                ]
+                - http://localhost:3000
+                - http://localhost:3001
+                - http://app.lapisweb.online
+                - http://admin.lapisweb.online
+                - https://app.lapisweb.online
+                - https://admin.lapisweb.online
               methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
-              headers: [Authorization, Content-Type]
+              headers: [Authorization, Content-Type, Accept]
               credentials: true
+              max_age: 3600
           - name: rate-limiting
             config:
               minute: 100
               policy: local
 
+  # =========================================
+  # GATEWAY HEALTH CHECK
+  # =========================================
   - name: gateway-health
     url: http://mockbin.org/request
     routes:
@@ -134,7 +145,9 @@ services:
               headers: [Content-Type]
               credentials: false
 
-  # Keycloak Identity Provider
+  # =========================================
+  # KEYCLOAK (Optional - nếu muốn proxy qua Kong)
+  # =========================================
   - name: keycloak
     url: http://keycloak:8080
     routes:
@@ -150,5 +163,11 @@ services:
             config:
               origins: ["*"]
               methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
-              headers: [Authorization, Content-Type]
+              headers:
+                - Authorization
+                - Content-Type
+                - Accept
+                - Origin
+                - X-Requested-With
               credentials: true
+              max_age: 3600
