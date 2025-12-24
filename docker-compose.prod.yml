@@ -54,7 +54,8 @@ services:
   # Keycloak - Production mode
   # =========================================
   keycloak:
-    command: start --import-realm --optimized
+    # Avoid --optimized on first start; use default build/start
+    command: start --import-realm
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
