@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:local": "pnpm docker:local && pnpm wait:services:local && pnpm build",
     "start": "turbo run start",
     "dev": "turbo run dev",
+    "dev:local": "pnpm docker:local && pnpm wait:services:local && pnpm dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
@@ -18,10 +20,22 @@
     "docker:prod": "docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up -d",
     "docker:prod:down": "docker compose -f docker-compose.yml -f docker-compose.prod.yml down",
     "docker:logs": "docker compose logs -f",
-    "setup:local": "pnpm install && pnpm setup:env && pnpm docker:local && echo '⏳ Chờ DB khởi động...' && sleep 5 && pnpm setup:db",
-    "setup:prod": "pnpm install && pnpm setup:env && pnpm setup:ssl && pnpm docker:prod && echo '⏳ Chờ services khởi động...' && sleep 10 && pnpm setup:db"
+    "wait:services:local": "bash scripts/wait-for-services.sh local",
+    "wait:services:prod": "bash scripts/wait-for-services.sh prod",
+    "setup:local": "pnpm install && pnpm setup:env && pnpm docker:local && pnpm wait:services:local && pnpm setup:db",
+    "setup:prod": "pnpm install && pnpm setup:env && pnpm setup:ssl && pnpm docker:prod && pnpm wait:services:prod && pnpm setup:db",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:stop": "pm2 stop all",
+    "pm2:restart": "pm2 restart all",
+    "pm2:delete": "pm2 delete all",
+    "pm2:logs": "pm2 logs",
+    "pm2:monit": "pm2 monit",
+    "pm2:status": "pm2 status",
+    "pm2:save": "pm2 save",
+    "pm2:startup": "pm2 startup"
   },
   "devDependencies": {
+    "pm2": "^5.4.3",
     "prettier": "^3.6.2",
     "turbo": "^2.6.1",
     "typescript": "5.9.2"
