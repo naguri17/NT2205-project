@@ -1,4 +1,4 @@
-import { Kafka } from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
 // Kafka brokers configuration
 // - Trong Docker network: kafka-broker-X:9092 (PLAINTEXT)
@@ -21,9 +21,14 @@ export const createKafkaClient = (service: string) => {
   return new Kafka({
     clientId: service,
     brokers,
+    logLevel: logLevel.WARN,
+    connectionTimeout: 10000,
+    requestTimeout: 30000,
     retry: {
-      initialRetryTime: 100,
-      retries: 8,
+      initialRetryTime: 300,
+      retries: 10,
+      maxRetryTime: 30000,
+      factor: 2,
     },
   });
 };

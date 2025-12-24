@@ -1,6 +1,5 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { uptime } from "process";
 import sessionRoute from "./routes/session.route.js";
 import { cors } from "hono/cors";
 import webhookRoute from "./routes/webhooks.route.js";
@@ -25,16 +24,45 @@ app.use(
 app.route("/sessions", sessionRoute);
 app.route("/webhooks", webhookRoute);
 
+// Health check endpoint
+app.get("/health", (c) => c.json({ status: "ok", service: "payment-service" }));
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const connectKafkaWithRetry = async (maxRetries = 5) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Kafka] Attempting to connect (attempt ${attempt}/${maxRetries})...`);
+      await producer.connect();
+      await consumer.connect();
+      console.log("[Kafka] Producer and consumer connected successfully");
+      return true;
+    } catch (error) {
+      console.error(`[Kafka] Connection attempt ${attempt} failed:`, error instanceof Error ? error.message : error);
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
+      console.log(`[Kafka] Retrying in ${delay}ms...`);
+      await sleep(delay);
+    }
+  }
+  return false;
+};
+
 const start = async () => {
   try {
-    Promise.all([await producer.connect(), await consumer.connect()]);
-    await runKafkaSubscriptions();
-
+    // Start HTTP server first so health checks work
     serve({
       fetch: app.fetch,
       port: 8002,
     });
-    console.log("Payment service is running on port 8002");
+    console.log("Payment service HTTP server is running on port 8002");
+
+    // Then connect to Kafka with retry
+    await connectKafkaWithRetry();
+    await runKafkaSubscriptions();
+    console.log("Payment service fully initialized with Kafka");
   } catch (error) {
     console.error("Error starting server:", error);
     process.exit(1);

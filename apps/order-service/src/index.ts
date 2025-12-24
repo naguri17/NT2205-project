@@ -21,6 +21,11 @@ fastify.register(cors, {
   credentials: true,
 });
 
+// Health check endpoint
+fastify.get("/health", async () => {
+  return { status: "ok", service: "order-service" };
+});
+
 fastify.get(
   "/test",
   {
@@ -35,21 +40,47 @@ fastify.get(
 
 fastify.register(orderRoute);
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const connectKafkaWithRetry = async (maxRetries = 5) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Kafka] Attempting to connect (attempt ${attempt}/${maxRetries})...`);
+      await producer.connect();
+      await consumer.connect();
+      console.log("[Kafka] Producer and consumer connected successfully");
+      return true;
+    } catch (error) {
+      console.error(`[Kafka] Connection attempt ${attempt} failed:`, error instanceof Error ? error.message : error);
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
+      console.log(`[Kafka] Retrying in ${delay}ms...`);
+      await sleep(delay);
+    }
+  }
+  return false;
+};
+
 const start = async () => {
   try {
-    Promise.all([
-      await connectOrderDB(),
-      await producer.connect(),
-      await consumer.connect(),
-    ]);
+    // Connect to database first
+    await connectOrderDB();
+    console.log("[DB] Order database connected");
 
+    // Start HTTP server so health checks work
+    await fastify.listen({ port: 8001, host: "0.0.0.0" });
+    console.log("Order service HTTP server is running on port 8001");
+
+    // Then connect to Kafka with retry
+    await connectKafkaWithRetry();
     await runKafkaSubscriptions();
-
-    await fastify.listen({ port: 8001 });
-    console.log("Order service is running on port 8001");
+    console.log("Order service fully initialized with Kafka");
   } catch (err) {
-    console.error(err);
+    console.error("Error starting server:", err);
     process.exit(1);
   }
 };
+
 start();
