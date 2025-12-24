@@ -1,16 +1,31 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
 function SignInContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const { status } = useSession();
+  const isSigningIn = useRef(false);
 
   useEffect(() => {
-    signIn("keycloak", { callbackUrl });
-  }, [callbackUrl]);
+    // Prevent multiple signIn calls
+    if (isSigningIn.current) return;
+
+    // If already authenticated, redirect to callback
+    if (status === "authenticated") {
+      window.location.href = callbackUrl;
+      return;
+    }
+
+    // Only trigger signIn when status is confirmed as unauthenticated
+    if (status === "unauthenticated") {
+      isSigningIn.current = true;
+      signIn("keycloak", { callbackUrl });
+    }
+  }, [callbackUrl, status]);
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-100">
