@@ -22,6 +22,7 @@
     "docker:logs": "docker compose logs -f",
     "setup:local": "pnpm install && pnpm setup:env && pnpm docker:local && pnpm setup:db && sleep 30",
     "setup:prod": "pnpm install && pnpm setup:env && pnpm setup:ssl && pnpm docker:prod && pnpm setup:db && sleep 30",
+    "deploy:prod": "pnpm build && pnpm pm2:start && bash scripts/wait-for-admin.sh && docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production restart nginx",
     "pm2:start": "pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop all",
     "pm2:restart": "pm2 restart all",

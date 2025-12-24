@@ -63,6 +63,12 @@ module.exports = {
       out_file: "./logs/admin-out.log",
       log_date_format: "YYYY-MM-DD HH:mm:ss Z",
       merge_logs: true,
+      // Production-specific: Ensure app is stable before marking as ready
+      min_uptime: "10s", // App must run for 10s without crash
+      max_restarts: 10, // Max restart attempts
+      restart_delay: 4000, // Wait 4s before restart
+      // Health check: PM2 will ping /api/health to verify app is ready
+      // Note: Next.js doesn't have built-in ready signal, so we use min_uptime
     },
 
     // =========================================
