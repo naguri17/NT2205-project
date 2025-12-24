@@ -72,13 +72,14 @@ module.exports = {
       name: "product-service",
       cwd: "./apps/product-service",
       script: "node_modules/.bin/tsx",
-      args: "--env-file=.env src/index.ts",
+      args: "--env-file=${ENV_FILE:-.env} src/index.ts",
       interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
         NODE_ENV: "production",
         PORT: 8000,
+        ENV_FILE: ".env.production",
       },
       env_development: {
         NODE_ENV: "development",
@@ -95,13 +96,14 @@ module.exports = {
       name: "order-service",
       cwd: "./apps/order-service",
       script: "node_modules/.bin/tsx",
-      args: "--env-file=.env src/index.ts",
+      args: "--env-file=${ENV_FILE:-.env} src/index.ts",
       interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
         NODE_ENV: "production",
         PORT: 8001,
+        ENV_FILE: ".env.production",
       },
       env_development: {
         NODE_ENV: "development",
@@ -118,13 +120,14 @@ module.exports = {
       name: "payment-service",
       cwd: "./apps/payment-service",
       script: "node_modules/.bin/tsx",
-      args: "--env-file=.env src/index.ts",
+      args: "--env-file=${ENV_FILE:-.env} src/index.ts",
       interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
         NODE_ENV: "production",
         PORT: 8002,
+        ENV_FILE: ".env.production",
       },
       env_development: {
         NODE_ENV: "development",

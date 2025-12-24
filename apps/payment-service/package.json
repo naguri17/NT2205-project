@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
     "build": "tsc",
-    "start": "tsx --env-file=.env src/index.ts",
+    "start": "ENV_FILE=${ENV_FILE:-.env} tsx --env-file=$ENV_FILE src/index.ts",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
