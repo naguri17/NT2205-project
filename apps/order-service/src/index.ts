@@ -45,13 +45,18 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const connectKafkaWithRetry = async (maxRetries = 5) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`[Kafka] Attempting to connect (attempt ${attempt}/${maxRetries})...`);
+      console.log(
+        `[Kafka] Attempting to connect (attempt ${attempt}/${maxRetries})...`,
+      );
       await producer.connect();
       await consumer.connect();
       console.log("[Kafka] Producer and consumer connected successfully");
       return true;
     } catch (error) {
-      console.error(`[Kafka] Connection attempt ${attempt} failed:`, error instanceof Error ? error.message : error);
+      console.error(
+        `[Kafka] Connection attempt ${attempt} failed:`,
+        error instanceof Error ? error.message : error,
+      );
       if (attempt === maxRetries) {
         throw error;
       }

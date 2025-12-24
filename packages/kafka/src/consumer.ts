@@ -54,10 +54,7 @@ export const createConsumer = (kafka: Kafka, groupId: string) => {
         break;
       } catch (error: any) {
         retries--;
-        if (
-          error?.type === "UNKNOWN_TOPIC_OR_PARTITION" ||
-          error?.code === 3
-        ) {
+        if (error?.type === "UNKNOWN_TOPIC_OR_PARTITION" || error?.code === 3) {
           console.log(
             `[Kafka] Topics not ready, retrying in ${delay}ms... (${5 - retries}/5)`,
           );
