@@ -32,8 +32,16 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
       issuer: process.env.KEYCLOAK_ISSUER!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name || profile.preferred_username,
+          email: profile.email,
+        };
+      },
     }),
   ],
+  debug: true,
   session: {
     strategy: "jwt",
   },
@@ -42,6 +50,7 @@ export const authOptions: NextAuthOptions = {
       if (account) {
         token.accessToken = account.access_token;
         token.idToken = account.id_token;
+        token.id = token.sub;
       }
 
       if (token.accessToken) {
@@ -57,7 +66,8 @@ export const authOptions: NextAuthOptions = {
         } catch {
           token.roles = [];
         }
-      } else if (!account) {
+      } else if (!token.accessToken && !account) {
+        // Trường hợp không có token, hủy session
         return {};
       }
       return token;
@@ -67,9 +77,10 @@ export const authOptions: NextAuthOptions = {
         session.accessToken = token.accessToken;
         session.idToken = token.idToken;
         session.roles = token.roles;
-        session.user.id = token.sub;
+        session.user.id = token.id;
+        session.isValidToken = true;
       } else {
-        return null;
+        session.isValidToken = false;
       }
       return session;
     },
