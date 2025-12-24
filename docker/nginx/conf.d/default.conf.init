@@ -1,0 +1,23 @@
+# =============================================
+# NGINX - INITIAL CONFIG FOR LETSENCRYPT
+# =============================================
+# Chỉ dùng để lấy certificate lần đầu
+# Sau đó thay bằng default.conf.letsencrypt
+# =============================================
+
+server {
+    listen 80;
+    server_name app.lapisweb.online admin.lapisweb.online api.lapisweb.online auth.lapisweb.online;
+    
+    # Let's Encrypt ACME challenge
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+    
+    # Temporary response
+    location / {
+        return 200 'SSL setup in progress...';
+        add_header Content-Type text/plain;
+    }
+}
+

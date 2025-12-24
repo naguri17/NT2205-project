@@ -1,0 +1,4 @@
+# Ignore Let's Encrypt certificates (sensitive data)
+conf/
+www/
+

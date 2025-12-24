@@ -1,0 +1,203 @@
+# =============================================
+# NT2205 - NGINX REVERSE PROXY CONFIGURATION
+# =============================================
+# Sử dụng Let's Encrypt SSL Certificates
+# Domains:
+#   - app.lapisweb.online   -> Client (NextJS - port 3000)
+#   - admin.lapisweb.online -> Admin (NextJS - port 3001)
+#   - api.lapisweb.online   -> Kong Gateway (port 9000)
+#   - auth.lapisweb.online  -> Keycloak (port 8080)
+# =============================================
+
+# Upstream definitions
+upstream client_upstream {
+    server host.docker.internal:3000;
+}
+
+upstream admin_upstream {
+    server host.docker.internal:3001;
+}
+
+upstream kong_upstream {
+    server kong:9000;
+}
+
+upstream keycloak_upstream {
+    server keycloak:8080;
+}
+
+# =============================================
+# HTTP -> HTTPS Redirect + ACME Challenge
+# =============================================
+server {
+    listen 80;
+    server_name app.lapisweb.online admin.lapisweb.online api.lapisweb.online auth.lapisweb.online;
+    
+    # Let's Encrypt ACME challenge
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+    
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# =============================================
+# CLIENT APP - app.lapisweb.online
+# =============================================
+server {
+    listen 443 ssl http2;
+    server_name app.lapisweb.online;
+
+    # Let's Encrypt Certificates
+    ssl_certificate /etc/letsencrypt/live/app.lapisweb.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app.lapisweb.online/privkey.pem;
+    
+    # SSL Configuration (Modern)
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    location / {
+        proxy_pass http://client_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+
+# =============================================
+# ADMIN APP - admin.lapisweb.online
+# =============================================
+server {
+    listen 443 ssl http2;
+    server_name admin.lapisweb.online;
+
+    ssl_certificate /etc/letsencrypt/live/app.lapisweb.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app.lapisweb.online/privkey.pem;
+    
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    location / {
+        proxy_pass http://admin_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# =============================================
+# API GATEWAY - api.lapisweb.online
+# =============================================
+server {
+    listen 443 ssl http2;
+    server_name api.lapisweb.online;
+
+    ssl_certificate /etc/letsencrypt/live/app.lapisweb.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app.lapisweb.online/privkey.pem;
+    
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    proxy_buffer_size 128k;
+    proxy_buffers 4 256k;
+    proxy_busy_buffers_size 256k;
+
+    location / {
+        proxy_pass http://kong_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        # CORS headers
+        add_header 'Access-Control-Allow-Origin' '$http_origin' always;
+        add_header 'Access-Control-Allow-Credentials' 'true' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS, PATCH' always;
+        add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Accept' always;
+        
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '$http_origin' always;
+            add_header 'Access-Control-Allow-Credentials' 'true' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS, PATCH' always;
+            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Accept' always;
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+    }
+}
+
+# =============================================
+# KEYCLOAK AUTH - auth.lapisweb.online
+# =============================================
+server {
+    listen 443 ssl http2;
+    server_name auth.lapisweb.online;
+
+    ssl_certificate /etc/letsencrypt/live/app.lapisweb.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/app.lapisweb.online/privkey.pem;
+    
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    proxy_buffer_size 128k;
+    proxy_buffers 4 256k;
+    proxy_busy_buffers_size 256k;
+    large_client_header_buffers 4 32k;
+
+    location / {
+        proxy_pass http://keycloak_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-Server $host;
+    }
+}
+
