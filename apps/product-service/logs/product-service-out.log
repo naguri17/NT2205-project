@@ -1,9 +1,0 @@
-2025-12-24 19:22:10 +07:00: [Kafka] product-service connecting to brokers: [ 'localhost:9094', 'localhost:9095', 'localhost:9096' ]
-2025-12-24 19:22:10 +07:00: Kafka consumer connected:product-group
-2025-12-24 19:22:10 +07:00: Product service is running on 8000
-2025-12-24 19:22:14 +07:00: [Kafka] product-service connecting to brokers: [ 'localhost:9094', 'localhost:9095', 'localhost:9096' ]
-2025-12-24 19:22:14 +07:00: Kafka consumer connected:product-group
-2025-12-24 19:22:14 +07:00: Product service is running on 8000
-2025-12-24 19:22:19 +07:00: [Kafka] product-service connecting to brokers: [ 'localhost:9094', 'localhost:9095', 'localhost:9096' ]
-2025-12-24 19:22:19 +07:00: Kafka consumer connected:product-group
-2025-12-24 19:22:19 +07:00: Product service is running on 8000
