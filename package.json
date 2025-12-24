@@ -11,6 +11,8 @@
     "setup:env": "node setup-env.js",
     "setup:db": "turbo run db:generate db:push --filter=@repo/product-db",
     "setup:ssl": "bash scripts/generate-ssl.sh",
+    "setup:letsencrypt": "bash scripts/init-letsencrypt.sh",
+    "ssl:renew": "bash scripts/renew-ssl.sh",
     "docker:local": "docker compose -f docker-compose.yml -f docker-compose.local.yml up -d",
     "docker:local:down": "docker compose -f docker-compose.yml -f docker-compose.local.yml down",
     "docker:prod": "docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up -d",
