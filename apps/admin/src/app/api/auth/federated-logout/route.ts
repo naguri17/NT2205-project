@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   if (idToken) {
     const logoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout?post_logout_redirect_uri=${encodeURIComponent(
-      process.env.NEXTAUTH_URL || ""
+      process.env.NEXTAUTH_URL || "",
     )}&id_token_hint=${idToken}`;
 
     return NextResponse.redirect(logoutUrl);

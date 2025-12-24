@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react";
 async function isTokenActive(accessToken: string): Promise<boolean> {
   const url = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token/introspect`;
   const authHeader = Buffer.from(
-    `${process.env.KEYCLOAK_CLIENT_ID}:${process.env.KEYCLOAK_CLIENT_SECRET}`
+    `${process.env.KEYCLOAK_CLIENT_ID}:${process.env.KEYCLOAK_CLIENT_SECRET}`,
   ).toString("base64");
 
   try {

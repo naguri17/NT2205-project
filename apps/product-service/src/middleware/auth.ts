@@ -36,7 +36,7 @@ const getKey = (header: jwt.JwtHeader, callback: jwt.SigningKeyCallback) => {
 export const authMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   // A. Lấy Header
   const authHeader = req.headers.authorization;
@@ -74,9 +74,9 @@ export const authMiddleware = async (
                 reject(new Error("Token decode failed"));
               }
             }
-          }
+          },
         );
-      }
+      },
     );
 
     // D. Gán user vào Request để dùng ở các route sau
@@ -94,7 +94,7 @@ export const authMiddleware = async (
 export const adminMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Lấy thông tin user đã được authMiddleware giải mã trước đó
   const user = (req as any).user;

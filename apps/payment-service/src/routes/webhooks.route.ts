@@ -32,7 +32,7 @@ webhookRoute.post("/stripe", async (c) => {
       const session = event.data.object as Stripe.Checkout.Session;
 
       const lineItems = await stripe.checkout.sessions.listLineItems(
-        session.id
+        session.id,
       );
 
       console.log("WEBHOOK RECEIVED", session);

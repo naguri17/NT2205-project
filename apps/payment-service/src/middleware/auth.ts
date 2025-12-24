@@ -70,9 +70,9 @@ export const authMiddleware = async (c: Context, next: Next) => {
                 reject(new Error("Token decode failed"));
               }
             }
-          }
+          },
         );
-      }
+      },
     );
 
     // D. Gán user vào Context để dùng ở các route sau

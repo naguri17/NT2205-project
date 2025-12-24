@@ -28,7 +28,7 @@ app.use(
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  })
+  }),
 );
 
 app.get("/test", authMiddleware, (req, res) => {

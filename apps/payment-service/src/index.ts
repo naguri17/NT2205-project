@@ -19,7 +19,7 @@ app.use(
       "https://admin.lapisweb.online",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.route("/sessions", sessionRoute);

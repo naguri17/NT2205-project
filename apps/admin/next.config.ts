@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.pexels.com",
-      }
-    ]
+      },
+    ],
   },
   typescript: {
     // Skip type checking during build (do it separately)

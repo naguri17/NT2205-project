@@ -99,7 +99,7 @@ export const columns: ColumnDef<User>[] = [
           className={cn(
             `p-1 rounded-md w-max text-xs`,
             status === "active" && "bg-green-500/40",
-            status === "inactive" && "bg-red-500/40"
+            status === "inactive" && "bg-red-500/40",
           )}
         >
           {status as string}

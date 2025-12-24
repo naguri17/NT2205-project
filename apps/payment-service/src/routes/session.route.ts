@@ -40,7 +40,7 @@ sessionRoute.post(
       console.error("Error creating session:", error);
       return c.json({ error: "Failed to create session" }, 500);
     }
-  }
+  },
 );
 
 sessionRoute.get("/:session_id", async (c) => {
@@ -49,7 +49,7 @@ sessionRoute.get("/:session_id", async (c) => {
     session_id as string,
     {
       expand: ["line_items"],
-    }
+    },
   );
 
   return c.json({

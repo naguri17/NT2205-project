@@ -66,7 +66,7 @@ async function authPlugin(fastify: FastifyInstance) {
               },
               (
                 err: jwt.VerifyErrors | null,
-                decodedToken: jwt.JwtPayload | string | undefined
+                decodedToken: jwt.JwtPayload | string | undefined,
               ) => {
                 if (err) {
                   reject(err);
@@ -77,9 +77,9 @@ async function authPlugin(fastify: FastifyInstance) {
                     reject(new Error("Token decode failed"));
                   }
                 }
-              }
+              },
             );
-          }
+          },
         );
 
         // Gán user vào request nếu thành công
@@ -90,7 +90,7 @@ async function authPlugin(fastify: FastifyInstance) {
         // ⭐ SỬA Ở ĐÂY: Bỏ 'throw', chỉ return response
         return reply.code(401).send({ message: "You're not logged in!" });
       }
-    }
+    },
   );
 
   fastify.decorate(
@@ -104,7 +104,7 @@ async function authPlugin(fastify: FastifyInstance) {
         reply.code(403).send({ message: "Forbidden: Admin access required" });
         throw new Error("Forbidden");
       }
-    }
+    },
   );
 }
 

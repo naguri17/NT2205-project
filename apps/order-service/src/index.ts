@@ -30,7 +30,7 @@ fastify.get(
     return reply.status(200).send({
       message: "Order service authenticated",
     });
-  }
+  },
 );
 
 fastify.register(orderRoute);

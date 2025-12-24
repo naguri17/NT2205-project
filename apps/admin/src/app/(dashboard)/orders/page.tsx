@@ -11,15 +11,12 @@ const getData = async (token: string | undefined): Promise<OrderType[]> => {
   }
 
   try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_ORDER_SERVICE_URL!,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(process.env.NEXT_PUBLIC_ORDER_SERVICE_URL!, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       return [];

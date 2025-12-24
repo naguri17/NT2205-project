@@ -41,18 +41,18 @@ Dự án E-commerce sử dụng kiến trúc Microservices cho doanh nghiệp nh
 
 ### Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| **Client/Admin** | Next.js 15, React 19, TailwindCSS |
-| **Reverse Proxy** | Nginx (SSL Termination) |
-| **API Gateway** | Kong Gateway (DB-less) |
-| **Auth** | Keycloak 26.4.4 (OIDC) |
-| **Microservices** | Express, Fastify, Hono |
-| **Message Queue** | Apache Kafka (KRaft) |
-| **Database** | PostgreSQL 15, MongoDB Atlas |
-| **Containerization** | Docker, Docker Compose |
-| **Monorepo** | Turborepo, PNPM |
-| **Monitoring** | CloudWatch (Production) |
+| Component            | Technology                        |
+| -------------------- | --------------------------------- |
+| **Client/Admin**     | Next.js 15, React 19, TailwindCSS |
+| **Reverse Proxy**    | Nginx (SSL Termination)           |
+| **API Gateway**      | Kong Gateway (DB-less)            |
+| **Auth**             | Keycloak 26.4.4 (OIDC)            |
+| **Microservices**    | Express, Fastify, Hono            |
+| **Message Queue**    | Apache Kafka (KRaft)              |
+| **Database**         | PostgreSQL 15, MongoDB Atlas      |
+| **Containerization** | Docker, Docker Compose            |
+| **Monorepo**         | Turborepo, PNPM                   |
+| **Monitoring**       | CloudWatch (Production)           |
 
 ---
 
@@ -102,13 +102,13 @@ pnpm dev
 
 ### 5. Truy cập ứng dụng
 
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| **Client App** | <http://localhost:3000> | Google Login |
-| **Admin Dashboard** | <http://localhost:3001> | `admin` / `admin` |
+| Service              | URL                     | Credentials       |
+| -------------------- | ----------------------- | ----------------- |
+| **Client App**       | <http://localhost:3000> | Google Login      |
+| **Admin Dashboard**  | <http://localhost:3001> | `admin` / `admin` |
 | **Keycloak Console** | <http://localhost:8080> | `admin` / `admin` |
-| **Kafka UI** | <http://localhost:8090> | - |
-| **Kong Gateway** | <http://localhost:9000> | - |
+| **Kafka UI**         | <http://localhost:8090> | -                 |
+| **Kong Gateway**     | <http://localhost:9000> | -                 |
 
 ---
 
@@ -149,12 +149,12 @@ pnpm setup:ssl
 
 Thêm các A records trỏ về IP server:
 
-| Record | Type | Value |
-|--------|------|-------|
-| `app` | A | 15.134.119.222 |
-| `admin` | A | 15.134.119.222 |
-| `api` | A | 15.134.119.222 |
-| `auth` | A | 15.134.119.222 |
+| Record  | Type | Value          |
+| ------- | ---- | -------------- |
+| `app`   | A    | 15.134.119.222 |
+| `admin` | A    | 15.134.119.222 |
+| `api`   | A    | 15.134.119.222 |
+| `auth`  | A    | 15.134.119.222 |
 
 ### 5. Cấu hình CloudWatch (Optional)
 
@@ -179,12 +179,12 @@ pnpm start
 
 ### 7. Production URLs
 
-| Service | URL |
-|---------|-----|
-| **Client App** | <https://app.lapisweb.online> |
+| Service             | URL                             |
+| ------------------- | ------------------------------- |
+| **Client App**      | <https://app.lapisweb.online>   |
 | **Admin Dashboard** | <https://admin.lapisweb.online> |
-| **API Gateway** | <https://api.lapisweb.online> |
-| **Keycloak** | <https://auth.lapisweb.online> |
+| **API Gateway**     | <https://api.lapisweb.online>   |
+| **Keycloak**        | <https://auth.lapisweb.online>  |
 
 ---
 

@@ -13,7 +13,7 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
             (p) =>
               p.id === product.id &&
               p.selectedSize === product.selectedSize &&
-              p.selectedColor === product.selectedColor
+              p.selectedColor === product.selectedColor,
           );
 
           if (existingIndex !== -1) {
@@ -42,7 +42,7 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
                 p.id === product.id &&
                 p.selectedSize === product.selectedSize &&
                 p.selectedColor === product.selectedColor
-              )
+              ),
           ),
         })),
       clearCart: () => set({ cart: [] }),
@@ -55,8 +55,8 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
           state.hasHydrated = true;
         }
       },
-    }
-  )
+    },
+  ),
 );
 
 export default useCartStore;

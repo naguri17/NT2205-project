@@ -22,6 +22,8 @@ module.exports = {
       cwd: "./apps/client",
       script: "node_modules/.bin/next",
       args: "start",
+      // Run the shell wrapper so pm2 doesn't try to execute the script as JS
+      interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
@@ -44,6 +46,7 @@ module.exports = {
       cwd: "./apps/admin",
       script: "node_modules/.bin/next",
       args: "start --port 3001",
+      interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
@@ -70,6 +73,7 @@ module.exports = {
       cwd: "./apps/product-service",
       script: "node_modules/.bin/tsx",
       args: "--env-file=.env src/index.ts",
+      interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
@@ -92,6 +96,7 @@ module.exports = {
       cwd: "./apps/order-service",
       script: "node_modules/.bin/tsx",
       args: "--env-file=.env src/index.ts",
+      interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
@@ -114,6 +119,7 @@ module.exports = {
       cwd: "./apps/payment-service",
       script: "node_modules/.bin/tsx",
       args: "--env-file=.env src/index.ts",
+      interpreter: "/bin/sh",
       instances: 1,
       exec_mode: "fork",
       env: {
@@ -133,4 +139,3 @@ module.exports = {
     },
   ],
 };
-

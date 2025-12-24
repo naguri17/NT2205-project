@@ -8,7 +8,7 @@ import { CheckoutProvider } from "@stripe/react-stripe-js/checkout";
 import CheckoutForm from "./CheckoutForm";
 
 const stripe = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_..."
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_...",
 );
 
 const fetchClientSecret = async (token: string, cart: CartItemsType) => {
@@ -21,7 +21,7 @@ const fetchClientSecret = async (token: string, cart: CartItemsType) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   )
     .then((response) => {
       console.log(response);

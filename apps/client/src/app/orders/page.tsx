@@ -28,7 +28,7 @@ const OrdersPage = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (res.ok) {

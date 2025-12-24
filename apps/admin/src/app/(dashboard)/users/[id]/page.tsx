@@ -26,12 +26,11 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const keycloakAdminBase =
-  process.env.KEYCLOAK_ADMIN_URL ||
-  "http://127.0.0.1:8080/admin/realms/NT2205";
+  process.env.KEYCLOAK_ADMIN_URL || "http://127.0.0.1:8080/admin/realms/NT2205";
 
 const getUserDetails = async (
   token: string | undefined,
-  userId: string
+  userId: string,
 ): Promise<any> => {
   if (!token || !userId) {
     return null;
@@ -49,7 +48,7 @@ const getUserDetails = async (
 
     if (!res.ok) {
       console.error(
-        `Keycloak Detail API Error: ${res.status} ${res.statusText}`
+        `Keycloak Detail API Error: ${res.status} ${res.statusText}`,
       );
       return null;
     }
