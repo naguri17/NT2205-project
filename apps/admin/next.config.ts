@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  reactStrictMode: false,
+  transpilePackages: ["@repo/types"],
   images: {
     remotePatterns: [
       {
@@ -9,10 +11,6 @@ const nextConfig: NextConfig = {
         hostname: "images.pexels.com",
       },
     ],
-  },
-  typescript: {
-    // Skip type checking during build (do it separately)
-    ignoreBuildErrors: true,
   },
   eslint: {
     // Skip ESLint during build
