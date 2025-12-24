@@ -110,13 +110,13 @@ docker run --rm \
     --force-renewal \
     $DOMAIN_ARGS
 
-# Check if certificates were created (use -e to follow symlinks)
-if [ ! -e "certbot/conf/live/app.lapisweb.online/fullchain.pem" ] && \
-   [ ! -d "certbot/conf/archive/app.lapisweb.online" ]; then
+# Check if certificates were created (use sudo because certbot creates root-owned files)
+if ! sudo test -e "certbot/conf/live/app.lapisweb.online/fullchain.pem" && \
+   ! sudo test -d "certbot/conf/archive/app.lapisweb.online"; then
     echo -e "${RED}✗ Certificate generation failed!${NC}"
     echo -e "${YELLOW}Checking certbot directory contents:${NC}"
-    ls -la certbot/conf/ 2>/dev/null || echo "  certbot/conf/ not found"
-    ls -la certbot/conf/live/ 2>/dev/null || echo "  certbot/conf/live/ not found"
+    sudo ls -la certbot/conf/ 2>/dev/null || echo "  certbot/conf/ not found"
+    sudo ls -la certbot/conf/live/ 2>/dev/null || echo "  certbot/conf/live/ not found"
     exit 1
 fi
 
