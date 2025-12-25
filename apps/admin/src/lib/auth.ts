@@ -54,21 +54,29 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (token.accessToken) {
-        const isActive = await isTokenActive(token.accessToken);
-        if (!isActive) {
-          return {};
-        }
-
         try {
+          const isActive = await isTokenActive(token.accessToken);
+          if (!isActive) {
+            // Token không active nhưng không clear session ngay
+            // Để middleware xử lý redirect thay vì gây loop
+            token.expiresAt = Date.now() - 1000; // Mark as expired
+            return token;
+          }
+
           const decodedAccessToken = jwtDecode(token.accessToken);
           const realmAccess = (decodedAccessToken as any).realm_access;
           token.roles = realmAccess?.roles || [];
-        } catch {
-          token.roles = [];
+        } catch (error) {
+          // Nếu có lỗi, giữ token cũ thay vì clear session
+          console.error("Error validating token:", error);
+          token.roles = token.roles || [];
         }
       } else if (!token.accessToken && !account) {
-        // Trường hợp không có token, hủy session
-        return {};
+        // Chỉ clear session khi thực sự không có token và không có account mới
+        // Điều này tránh clear session trong quá trình OAuth callback
+        if (!token.sub) {
+          return {};
+        }
       }
       return token;
     },

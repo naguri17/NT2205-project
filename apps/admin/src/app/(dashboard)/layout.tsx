@@ -15,22 +15,15 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    // 1. Nếu đang loading thì không làm gì cả
-    if (status === "loading") return;
-
-    // 2. Nếu chưa đăng nhập (unauthenticated) -> Đá về trang Login custom
-    if (status === "unauthenticated" || !session) {
-      router.push("/auth/signin");
-      return;
-    }
-
-    // 3. (Tuỳ chọn) Check thêm Role ở client nếu muốn chắc chắn
-    // const roles = session?.roles || [];
-    // if (!roles.includes("admin")) {
-    //   router.push("/unauthorized");
-    // }
-  }, [status, session, router]);
+  // Middleware đã handle authentication check rồi
+  // Không cần redirect ở đây nữa để tránh conflict và redirect loop
+  // useEffect(() => {
+  //   if (status === "loading") return;
+  //   if (status === "unauthenticated" || !session) {
+  //     router.push("/auth/signin");
+  //     return;
+  //   }
+  // }, [status, session, router]);
 
   // Hiển thị màn hình loading trong lúc đợi check session để tránh flash giao diện
   if (status === "loading" || status === "unauthenticated") {
