@@ -15,6 +15,17 @@ function SignInContent() {
     // Prevent multiple signIn calls
     if (isSigningIn.current) return;
 
+    // Check for OAuth error in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+
+    if (error) {
+      // Có lỗi OAuth, hiển thị error message thay vì loop
+      console.error("OAuth error:", error);
+      // Không redirect nữa để tránh loop
+      return;
+    }
+
     // If already authenticated, redirect to callback
     // Chỉ redirect nếu có session và không phải đang trong quá trình OAuth callback
     if (status === "authenticated" && !window.location.pathname.includes("/api/auth/callback")) {
@@ -27,7 +38,11 @@ function SignInContent() {
     // Và không phải đang trong quá trình OAuth callback
     if (status === "unauthenticated" && !window.location.pathname.includes("/api/auth/callback")) {
       isSigningIn.current = true;
-      signIn("keycloak", { callbackUrl });
+      signIn("keycloak", { callbackUrl }).catch((err) => {
+        console.error("Sign in error:", err);
+        // Reset flag để có thể retry
+        isSigningIn.current = false;
+      });
     }
   }, [callbackUrl, status, router]);
 
