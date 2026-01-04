@@ -17,6 +17,8 @@ module.exports = {
     // =========================================
     // Frontend Apps (Next.js)
     // =========================================
+    // Client and Admin apps are deployed on Vercel, not managed by PM2
+    /*
     {
       name: "client",
       cwd: "./apps/client",
@@ -70,6 +72,7 @@ module.exports = {
       // Health check: PM2 will ping /api/health to verify app is ready
       // Note: Next.js doesn't have built-in ready signal, so we use min_uptime
     },
+    */
 
     // =========================================
     // Backend Microservices
