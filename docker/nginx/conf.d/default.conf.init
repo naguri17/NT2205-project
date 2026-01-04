@@ -7,7 +7,7 @@
 
 server {
     listen 80;
-    server_name app.lapisweb.online admin.lapisweb.online api.lapisweb.online auth.lapisweb.online;
+    server_name api.lapisweb.online auth.lapisweb.online;
     
     # Let's Encrypt ACME challenge
     location /.well-known/acme-challenge/ {
