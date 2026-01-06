@@ -55,11 +55,41 @@ echo -e "${GREEN}✓${NC} Keycloak is ready"
 # Step 4: Deploy backend services
 echo ""
 echo "Step 4: Deploying backend services..."
+
+# Check if payment-service-secret exists
+if ! kubectl get secret payment-service-secret -n backend &>/dev/null; then
+    echo -e "${YELLOW}⚠ Warning: payment-service-secret not found${NC}"
+    echo -e "${YELLOW}Creating payment-service-secret from setup-env.js...${NC}"
+    if [ -f "./k8s/scripts/create-payment-secret.sh" ]; then
+        ./k8s/scripts/create-payment-secret.sh || {
+            echo -e "${RED}Error: Failed to create payment-service-secret${NC}"
+            echo -e "${YELLOW}Please run manually: ./k8s/scripts/create-payment-secret.sh${NC}"
+            exit 1
+        }
+    else
+        echo -e "${RED}Error: create-payment-secret.sh not found${NC}"
+        echo -e "${YELLOW}Please create the secret manually before deploying${NC}"
+        exit 1
+    fi
+fi
+
 kubectl apply -f backend/
 echo -e "${GREEN}✓${NC} Backend service manifests applied"
-echo -e "${YELLOW}Waiting for backend services to be ready...${NC}"
-kubectl wait --for=condition=ready pod -l tier=backend -n backend --timeout=120s
-echo -e "${GREEN}✓${NC} Backend services are ready"
+echo -e "${YELLOW}Waiting for backend services to be ready (this may take a few minutes)...${NC}"
+
+# Wait with better error handling
+if kubectl wait --for=condition=ready pod -l tier=backend -n backend --timeout=300s 2>/dev/null; then
+    echo -e "${GREEN}✓${NC} Backend services are ready"
+else
+    echo -e "${RED}✗${NC} Backend services did not become ready within timeout"
+    echo -e "${YELLOW}Troubleshooting:${NC}"
+    echo "  Run: ./k8s/scripts/troubleshoot-backend.sh"
+    echo "  Or check manually:"
+    echo "    kubectl get pods -n backend"
+    echo "    kubectl describe pod <pod-name> -n backend"
+    echo "    kubectl logs <pod-name> -n backend"
+    exit 1
+fi
 
 # Step 5: Deploy API Gateway
 echo ""

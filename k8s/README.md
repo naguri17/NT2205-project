@@ -169,9 +169,21 @@ kubectl rollout undo deployment/product-service -n backend
 
 ### Troubleshooting
 
+**Quick troubleshooting script:**
+
 ```bash
-# Describe pod
+# Run automated troubleshooting
+./k8s/scripts/troubleshoot-backend.sh
+```
+
+**Manual troubleshooting:**
+
+```bash
+# Describe pod (check Events section)
 kubectl describe pod <pod-name> -n backend
+
+# View logs
+kubectl logs <pod-name> -n backend
 
 # View events
 kubectl get events -n backend --sort-by='.lastTimestamp'
@@ -179,9 +191,20 @@ kubectl get events -n backend --sort-by='.lastTimestamp'
 # Check service endpoints
 kubectl get endpoints -n backend
 
+# Check secrets (especially payment-service-secret)
+kubectl get secrets -n backend
+./k8s/scripts/create-payment-secret.sh  # If missing
+
 # Port forward for testing
 kubectl port-forward svc/product-service 8000:8000 -n backend
+curl http://localhost:8000/health
 ```
+
+**Common issues:**
+
+- **Pods timeout**: Check if secrets exist, dependencies are ready, images are loaded
+- **CrashLoopBackOff**: Check logs for application errors
+- **ImagePullBackOff**: Build and load images with `pnpm k8s:build && sudo k8s/LOAD-IMAGES.sh`
 
 ## Documentation
 

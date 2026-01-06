@@ -1058,6 +1058,194 @@ kubectl exec -it <backend-pod> -n backend -- sh
 
 ---
 
+## Troubleshooting Backend Services Deployment
+
+If backend services timeout or fail to start during deployment:
+
+### Quick Troubleshooting
+
+```bash
+# Run automated troubleshooting script
+./k8s/scripts/troubleshoot-backend.sh
+```
+
+### Common Issues and Solutions
+
+#### 1. Pods Not Becoming Ready (Timeout)
+
+**Symptoms**: Pods created but timeout waiting for ready condition
+
+**Diagnosis**:
+
+```bash
+# Check pod status
+kubectl get pods -n backend
+
+# Check pod details
+kubectl describe pod <pod-name> -n backend
+
+# Check logs
+kubectl logs <pod-name> -n backend
+```
+
+**Common Causes**:
+
+- **Missing Secrets**: Payment service secret not created
+
+  ```bash
+  # Solution: Create the secret
+  ./k8s/scripts/create-payment-secret.sh
+  ```
+
+- **Health Check Failing**: `/health` endpoint not responding
+
+  ```bash
+  # Check if health endpoint exists in service code
+  # Verify port matches deployment configuration
+  kubectl port-forward <pod-name> 8000:8000 -n backend
+  curl http://localhost:8000/health
+  ```
+
+- **Dependencies Not Ready**: Database or Keycloak not accessible
+
+  ```bash
+  # Check dependencies
+  kubectl get pods -n database
+  kubectl get pods -n auth
+  
+  # Wait for them to be ready before deploying backend
+  ```
+
+- **Images Not Loaded**: Container images not available in cluster
+
+  ```bash
+  # Solution: Build and load images
+  pnpm k8s:build
+  sudo k8s/LOAD-IMAGES.sh
+  ```
+
+- **Configuration Errors**: Wrong URLs or connection strings
+
+  ```bash
+  # Check ConfigMaps
+  kubectl get configmap -n backend -o yaml
+  
+  # Verify Kafka brokers, Keycloak URLs are correct
+  ```
+
+#### 2. CrashLoopBackOff
+
+**Symptoms**: Pods restarting repeatedly
+
+**Diagnosis**:
+
+```bash
+# Check logs for errors
+kubectl logs <pod-name> -n backend --previous
+
+# Check events
+kubectl get events -n backend --sort-by='.lastTimestamp'
+```
+
+**Common Causes**:
+
+- **Application Startup Error**: Check application logs
+- **Missing Environment Variables**: Verify ConfigMaps and Secrets
+- **Database Connection Failed**: Check PostgreSQL is running and accessible
+- **Kafka Connection Failed**: Verify Kafka is running
+
+#### 3. ImagePullBackOff
+
+**Symptoms**: Pods cannot pull container images
+
+**Solution**:
+
+```bash
+# For local development (imagePullPolicy: Never)
+# Ensure images are built and loaded:
+pnpm k8s:build
+sudo k8s/LOAD-IMAGES.sh
+
+# Verify images exist
+docker images | grep -E "product-service|order-service|payment-service"
+sudo k3s ctr images ls | grep -E "product-service|order-service|payment-service"
+```
+
+#### 4. Secret Issues
+
+**Symptoms**: Pods fail to start due to missing secrets
+
+**Solution**:
+
+```bash
+# Check if secrets exist
+kubectl get secrets -n backend
+
+# Create payment service secret
+./k8s/scripts/create-payment-secret.sh
+
+# Verify secret contents (base64 encoded)
+kubectl get secret payment-service-secret -n backend -o yaml
+```
+
+### Manual Troubleshooting Steps
+
+1. **Check Pod Status**:
+
+   ```bash
+   kubectl get pods -n backend -o wide
+   ```
+
+2. **Describe Pod** (look for Events section):
+
+   ```bash
+   kubectl describe pod <pod-name> -n backend
+   ```
+
+3. **Check Logs**:
+
+   ```bash
+   kubectl logs <pod-name> -n backend
+   kubectl logs <pod-name> -n backend --previous  # Previous container
+   ```
+
+4. **Check Events**:
+
+   ```bash
+   kubectl get events -n backend --sort-by='.lastTimestamp'
+   ```
+
+5. **Verify Dependencies**:
+
+   ```bash
+   # PostgreSQL
+   kubectl get pods -n database
+   kubectl logs <postgres-pod> -n database
+   
+   # Keycloak
+   kubectl get pods -n auth
+   kubectl logs <keycloak-pod> -n auth
+   ```
+
+6. **Test Connectivity**:
+
+   ```bash
+   # Port forward to test service directly
+   kubectl port-forward <pod-name> 8000:8000 -n backend
+   curl http://localhost:8000/health
+   ```
+
+### Increase Timeout (If Needed)
+
+If services take longer to start, edit `k8s/deploy.sh`:
+
+```bash
+# Change timeout from 120s to 300s or more
+kubectl wait --for=condition=ready pod -l tier=backend -n backend --timeout=300s
+```
+
+---
+
 ## Orchestration Features Summary
 
 Your production setup provides these orchestration capabilities:

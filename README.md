@@ -906,30 +906,60 @@ Make sure you're using `docker-compose.local.yml` (no awslogs driver):
 pnpm docker:local  # NOT docker compose up
 ```
 
-### Backend services won't start
+### Backend services won't start or timeout during deployment
+
+**Quick troubleshooting:**
 
 ```bash
-# Check Kubernetes logs
+# Run automated troubleshooting script
+./k8s/scripts/troubleshoot-backend.sh
+```
+
+**Manual troubleshooting:**
+
+```bash
+# 1. Check pod status
+kubectl get pods -n backend
+
+# 2. Check pod details (look for Events section)
+kubectl describe pod <pod-name> -n backend
+
+# 3. Check logs
+kubectl logs <pod-name> -n backend
+# Or use pnpm scripts:
 pnpm k8s:logs:product
 pnpm k8s:logs:order
 pnpm k8s:logs:payment
 
-# Check pod status
-pnpm k8s:status
-
-# Check pod details
-kubectl describe pod <pod-name> -n backend
-
-# Check ConfigMaps and Secrets
-kubectl get configmap -n backend
+# 4. Check if secrets exist
 kubectl get secret -n backend
-
-# Verify payment service secret exists
 kubectl get secret payment-service-secret -n backend
 
-# If secret is missing, create it:
+# 5. If payment-service-secret is missing, create it:
 ./k8s/scripts/create-payment-secret.sh
+
+# 6. Check if dependencies are ready
+kubectl get pods -n database  # PostgreSQL
+kubectl get pods -n auth      # Keycloak
+
+# 7. Check events for errors
+kubectl get events -n backend --sort-by='.lastTimestamp'
+
+# 8. Verify images are loaded
+docker images | grep -E "product-service|order-service|payment-service"
+# If missing, build and load:
+pnpm k8s:build
+sudo k8s/LOAD-IMAGES.sh
 ```
+
+**Common issues:**
+
+1. **Missing payment-service-secret**: Run `./k8s/scripts/create-payment-secret.sh`
+2. **Images not loaded**: Run `pnpm k8s:build` then `sudo k8s/LOAD-IMAGES.sh`
+3. **Dependencies not ready**: Wait for PostgreSQL and Keycloak to be ready first
+4. **Health check failing**: Check if `/health` endpoint is implemented in services
+5. **Kafka connection issues**: Verify Kafka is running and accessible
+6. **Keycloak connection issues**: Verify Keycloak URL is accessible from pods
 
 ### Vercel deployment issues
 
