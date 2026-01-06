@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: order-service
+    namespace: backend
+    labels:
+        app: order-service
+        component: microservice
+        tier: backend
+spec:
+    replicas: 2 # Multiple replicas for high availability
+    selector:
+        matchLabels:
+            app: order-service
+    template:
+        metadata:
+            labels:
+                app: order-service
+                component: microservice
+                tier: backend
+        spec:
+            containers:
+                - name: order-service
+                  # TODO: Replace with your actual container image
+                  image: order-service:latest
+                  imagePullPolicy: Never
+                  ports:
+                      - containerPort: 8001
+                        name: http
+                        protocol: TCP
+                  env:
+                      - name: NODE_ENV
+                        valueFrom:
+                            configMapKeyRef:
+                                name: order-service-config
+                                key: NODE_ENV
+                      - name: PORT
+                        valueFrom:
+                            configMapKeyRef:
+                                name: order-service-config
+                                key: PORT
+                      - name: MONGO_URL
+                        valueFrom:
+                            secretKeyRef:
+                                name: order-service-secret
+                                key: MONGO_URL
+                      - name: KEYCLOAK_ISSUER
+                        valueFrom:
+                            configMapKeyRef:
+                                name: order-service-config
+                                key: KEYCLOAK_ISSUER
+                      - name: JWKS_URI
+                        valueFrom:
+                            configMapKeyRef:
+                                name: order-service-config
+                                key: JWKS_URI
+                      - name: KAFKA_BROKERS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: order-service-config
+                                key: KAFKA_BROKERS
+                  resources:
+                      requests:
+                          memory: "256Mi"
+                          cpu: "250m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "500m"
+                  livenessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8001
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8001
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  startupProbe:
+                      httpGet:
+                          path: /health
+                          port: 8001
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 10

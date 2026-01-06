@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: payment-service
+    namespace: backend
+    labels:
+        app: payment-service
+        component: microservice
+        tier: backend
+spec:
+    type: ClusterIP # Internal only - accessed via Kong Gateway
+    ports:
+        - port: 8002
+          targetPort: 8002
+          protocol: TCP
+          name: http
+    selector:
+        app: payment-service

@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: keycloak-config
+    namespace: auth
+data:
+    KC_HOSTNAME: auth.lapisweb.online
+    KC_HOSTNAME_STRICT: "false"
+    KC_PROXY_HEADERS: xforwarded
+    KC_HTTP_ENABLED: "true"
+    KC_DB: postgres
+    KC_DB_URL_HOST: postgres.database.svc.cluster.local
+    KC_DB_URL_PORT: "5432"
+    KC_DB_URL_DATABASE: products
+    KC_DB_USERNAME: admin
+    KC_DB_PASSWORD: "123456" # Should reference secret in production
+    KC_HEALTH_ENABLED: "true"

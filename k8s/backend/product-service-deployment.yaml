@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: product-service
+    namespace: backend
+    labels:
+        app: product-service
+        component: microservice
+        tier: backend
+spec:
+    replicas: 2 # Multiple replicas for high availability
+    selector:
+        matchLabels:
+            app: product-service
+    template:
+        metadata:
+            labels:
+                app: product-service
+                component: microservice
+                tier: backend
+        spec:
+            containers:
+                - name: product-service
+                  # TODO: Replace with your actual container image
+                  # Example: image: your-registry/product-service:latest
+                  image: product-service:latest
+                  # For development, you can use a local image or build from Dockerfile
+                  # imagePullPolicy: Never  # Use local image
+                  imagePullPolicy: Never
+                  ports:
+                      - containerPort: 8000
+                        name: http
+                        protocol: TCP
+                  env:
+                      # Load from ConfigMap
+                      - name: NODE_ENV
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: NODE_ENV
+                      - name: PORT
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: PORT
+                      - name: DATABASE_URL
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: DATABASE_URL
+                      - name: KEYCLOAK_ISSUER
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: KEYCLOAK_ISSUER
+                      - name: JWKS_URI
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: JWKS_URI
+                      - name: KAFKA_BROKERS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: product-service-config
+                                key: KAFKA_BROKERS
+                  # Load from Secret (if needed)
+                  # - name: DATABASE_PASSWORD
+                  #   valueFrom:
+                  #     secretKeyRef:
+                  #       name: product-service-secret
+                  #       key: DATABASE_PASSWORD
+                  resources:
+                      requests:
+                          memory: "256Mi"
+                          cpu: "250m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "500m"
+                  livenessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8000
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8000
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  startupProbe:
+                      httpGet:
+                          path: /health
+                          port: 8000
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 10

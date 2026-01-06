@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: order-service-config
+    namespace: backend
+data:
+    NODE_ENV: "production"
+    PORT: "8001"
+    # Keycloak authentication - matches setup-env.js production values
+    KEYCLOAK_ISSUER: "https://auth.lapisweb.online/realms/NT2205"
+    JWKS_URI: "https://auth.lapisweb.online/realms/NT2205/protocol/openid-connect/certs"
+    # Kafka connection - matches setup-env.js production values
+    KAFKA_BROKERS: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
+    # CORS origins
+    CORS_ORIGINS: "http://localhost:3000,http://localhost:3001,https://app.lapisweb.online,https://admin.lapisweb.online"

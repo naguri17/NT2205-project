@@ -1,0 +1,30 @@
+---
+# Alternative: Use Ingress instead of NodePort
+# Requires an Ingress Controller (e.g., NGINX Ingress Controller)
+# Uncomment and configure if using Ingress
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: kong-ingress
+#   namespace: gateway
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+# spec:
+#   tls:
+#   - hosts:
+#     - api.lapisweb.online
+#     secretName: api-tls-secret
+#   rules:
+#   - host: api.lapisweb.online
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: kong
+#             port:
+#               number: 9000
+

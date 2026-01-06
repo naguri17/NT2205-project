@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: product-service-config
+    namespace: backend
+data:
+    NODE_ENV: "production"
+    PORT: "8000"
+    # Database connection - using Kubernetes service DNS (matches K8s deployment)
+    DATABASE_URL: "postgresql://admin:123456@postgres.database.svc.cluster.local:5432/products?schema=public"
+    # Keycloak authentication - matches setup-env.js production values
+    KEYCLOAK_ISSUER: "https://auth.lapisweb.online/realms/NT2205"
+    JWKS_URI: "https://auth.lapisweb.online/realms/NT2205/protocol/openid-connect/certs"
+    # Kafka connection - matches setup-env.js production values
+    KAFKA_BROKERS: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
+    # CORS origins
+    CORS_ORIGINS: "http://localhost:3000,http://localhost:3001,https://app.lapisweb.online,https://admin.lapisweb.online"

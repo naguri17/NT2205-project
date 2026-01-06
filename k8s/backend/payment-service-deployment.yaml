@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: payment-service
+    namespace: backend
+    labels:
+        app: payment-service
+        component: microservice
+        tier: backend
+spec:
+    replicas: 2 # Multiple replicas for high availability
+    selector:
+        matchLabels:
+            app: payment-service
+    template:
+        metadata:
+            labels:
+                app: payment-service
+                component: microservice
+                tier: backend
+        spec:
+            containers:
+                - name: payment-service
+                  # TODO: Replace with your actual container image
+                  image: payment-service:latest
+                  imagePullPolicy: Never
+                  ports:
+                      - containerPort: 8002
+                        name: http
+                        protocol: TCP
+                  env:
+                      - name: NODE_ENV
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: NODE_ENV
+                      - name: PORT
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: PORT
+                      - name: KEYCLOAK_ISSUER
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: KEYCLOAK_ISSUER
+                      - name: JWKS_URI
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: JWKS_URI
+                      - name: CLIENT_URL
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: CLIENT_URL
+                      - name: STRIPE_SECRET_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: payment-service-secret
+                                key: STRIPE_SECRET_KEY
+                      - name: STRIPE_WEBHOOK_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: payment-service-secret
+                                key: STRIPE_WEBHOOK_SECRET
+                      - name: KAFKA_BROKERS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: payment-service-config
+                                key: KAFKA_BROKERS
+                  resources:
+                      requests:
+                          memory: "256Mi"
+                          cpu: "250m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "500m"
+                  livenessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8002
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8002
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  startupProbe:
+                      httpGet:
+                          path: /health
+                          port: 8002
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 10
