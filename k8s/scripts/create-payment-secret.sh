@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Script to create payment-service-secret from environment variables or setup-env.js
+# Usage: ./k8s/scripts/create-payment-secret.sh
+# 
+# This script will:
+# 1. Try to read from environment variables first
+# 2. If not set, try to extract from setup-env.js
+# 3. Create the Kubernetes secret
+
+set -e
+
+# Colors for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+SETUP_ENV_FILE="$PROJECT_ROOT/setup-env.js"
+
+echo "=========================================="
+echo "Creating payment-service-secret"
+echo "=========================================="
+
+# Function to extract value from setup-env.js
+extract_from_setup_env() {
+    local key=$1
+    # Extract the value - handles both single-line and multi-line formats
+    # Pattern: STRIPE_SECRET_KEY: "value" or STRIPE_SECRET_KEY:\n    "value"
+    node -e "
+        const fs = require('fs');
+        const content = fs.readFileSync('$SETUP_ENV_FILE', 'utf8');
+        const match = content.match(/\"$key\"\s*:\s*\"([^\"]+)\"/);
+        if (match) {
+            console.log(match[1]);
+        }
+    " 2>/dev/null || grep -A 1 "\"$key\":" "$SETUP_ENV_FILE" | grep -o '"[^"]*"' | head -1 | sed 's/"//g'
+}
+
+# Try to get STRIPE_SECRET_KEY from environment or setup-env.js
+if [ -z "$STRIPE_SECRET_KEY" ]; then
+    if [ -f "$SETUP_ENV_FILE" ]; then
+        echo -e "${BLUE}Reading STRIPE_SECRET_KEY from setup-env.js...${NC}"
+        STRIPE_SECRET_KEY=$(extract_from_setup_env "STRIPE_SECRET_KEY")
+        if [ -z "$STRIPE_SECRET_KEY" ]; then
+            echo -e "${RED}Error: Could not find STRIPE_SECRET_KEY in setup-env.js${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}Error: STRIPE_SECRET_KEY environment variable is not set and setup-env.js not found${NC}"
+        echo "Please set it using: export STRIPE_SECRET_KEY=\"your-stripe-secret-key\""
+        exit 1
+    fi
+else
+    echo -e "${GREEN}Using STRIPE_SECRET_KEY from environment variable${NC}"
+fi
+
+# Try to get STRIPE_WEBHOOK_SECRET from environment or setup-env.js
+if [ -z "$STRIPE_WEBHOOK_SECRET" ]; then
+    if [ -f "$SETUP_ENV_FILE" ]; then
+        echo -e "${BLUE}Reading STRIPE_WEBHOOK_SECRET from setup-env.js...${NC}"
+        STRIPE_WEBHOOK_SECRET=$(extract_from_setup_env "STRIPE_WEBHOOK_SECRET")
+        if [ -z "$STRIPE_WEBHOOK_SECRET" ]; then
+            echo -e "${RED}Error: Could not find STRIPE_WEBHOOK_SECRET in setup-env.js${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}Error: STRIPE_WEBHOOK_SECRET environment variable is not set and setup-env.js not found${NC}"
+        echo "Please set it using: export STRIPE_WEBHOOK_SECRET=\"your-webhook-secret\""
+        exit 1
+    fi
+else
+    echo -e "${GREEN}Using STRIPE_WEBHOOK_SECRET from environment variable${NC}"
+fi
+
+# Check if kubectl is available
+if ! command -v kubectl &> /dev/null; then
+    echo -e "${RED}Error: kubectl is not installed or not in PATH${NC}"
+    exit 1
+fi
+
+# Check if namespace exists
+if ! kubectl get namespace backend &> /dev/null; then
+    echo -e "${YELLOW}Warning: 'backend' namespace does not exist. Creating it...${NC}"
+    kubectl create namespace backend
+fi
+
+# Create the secret
+echo "Creating secret from environment variables..."
+kubectl create secret generic payment-service-secret \
+    --from-literal=STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}" \
+    --from-literal=STRIPE_WEBHOOK_SECRET="${STRIPE_WEBHOOK_SECRET}" \
+    --namespace=backend \
+    --dry-run=client -o yaml | kubectl apply -f -
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓${NC} Secret 'payment-service-secret' created/updated successfully in namespace 'backend'"
+else
+    echo -e "${RED}Error: Failed to create secret${NC}"
+    exit 1
+fi
+
+echo ""
+echo "To verify the secret was created:"
+echo "  kubectl get secret payment-service-secret -n backend"
+echo ""
+echo "To view the secret (base64 encoded):"
+echo "  kubectl get secret payment-service-secret -n backend -o yaml"
+
