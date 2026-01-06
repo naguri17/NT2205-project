@@ -4,6 +4,41 @@ This directory contains Kubernetes manifests for orchestrating all backend servi
 
 ## Quick Start
 
+### 0. Set Up Secrets (Required Before Deployment)
+
+**Important**: Kubernetes secrets must be created before deploying services. The secret YAML files contain placeholders and should NOT be committed with real secrets.
+
+```bash
+# Create payment service secret from setup-env.js or environment variables
+./k8s/scripts/create-payment-secret.sh
+```
+
+This script will:
+
+- Read Stripe keys from `setup-env.js` (if available)
+- Or use environment variables `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`
+- Create the Kubernetes secret in the `backend` namespace
+
+**Alternative: Manual secret creation**:
+
+```bash
+# Set environment variables
+export STRIPE_SECRET_KEY="your-stripe-secret-key"
+export STRIPE_WEBHOOK_SECRET="your-webhook-secret"
+
+# Create secret
+kubectl create secret generic payment-service-secret \
+  --from-literal=STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}" \
+  --from-literal=STRIPE_WEBHOOK_SECRET="${STRIPE_WEBHOOK_SECRET}" \
+  --namespace=backend
+```
+
+**Verify secret was created**:
+
+```bash
+kubectl get secret payment-service-secret -n backend
+```
+
 ### 1. Build Container Images
 
 ```bash

@@ -280,7 +280,35 @@ pnpm deploy:prod
 
 #### Detailed Steps
 
-1. **Build container images**:
+1. **Set up Kubernetes Secrets** (Required before deployment):
+
+   ```bash
+   # Create payment service secret from setup-env.js or environment variables
+   ./k8s/scripts/create-payment-secret.sh
+   ```
+
+   This script will:
+   - Read Stripe keys from `setup-env.js` (if available)
+   - Or use environment variables `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`
+   - Create the Kubernetes secret in the `backend` namespace
+
+   **Alternative: Manual secret creation**:
+
+   ```bash
+   # Set environment variables
+   export STRIPE_SECRET_KEY="your-stripe-secret-key"
+   export STRIPE_WEBHOOK_SECRET="your-webhook-secret"
+   
+   # Create secret
+   kubectl create secret generic payment-service-secret \
+     --from-literal=STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}" \
+     --from-literal=STRIPE_WEBHOOK_SECRET="${STRIPE_WEBHOOK_SECRET}" \
+     --namespace=backend
+   ```
+
+   **Note**: The secret YAML files in `k8s/backend/` contain placeholders and should NOT be committed with real secrets. Always use the helper script or `kubectl create secret` command.
+
+2. **Build container images**:
 
    ```bash
    pnpm k8s:build
@@ -291,7 +319,7 @@ pnpm deploy:prod
    - Order service
    - Payment service
 
-2. **Deploy to Kubernetes**:
+3. **Deploy to Kubernetes**:
 
    ```bash
    pnpm k8s:deploy
@@ -304,7 +332,7 @@ pnpm deploy:prod
    - Service discovery
    - Scaling
 
-3. **Check services**:
+4. **Check services**:
 
    ```bash
    pnpm k8s:status
@@ -334,9 +362,13 @@ See details in [Vercel Deployment](#-vercel-deployment) section
    - Health checks and auto-recovery are automatically configured
    - Services are orchestrated with proper resource management
 
-3. **Environment Variables**:
-   - Backend: Use Kubernetes ConfigMaps and Secrets
-   - Frontend: Configure in Vercel dashboard or `vercel.json`
+3. **Environment Variables & Secrets**:
+   - **Backend Secrets**: Use Kubernetes Secrets (created via helper script or `kubectl`)
+     - Payment service secrets: `./k8s/scripts/create-payment-secret.sh`
+     - Reads from `setup-env.js` or environment variables
+     - **Never commit real secrets to git** - use placeholders in YAML files
+   - **Backend Config**: Use Kubernetes ConfigMaps (non-sensitive config)
+   - **Frontend**: Configure in Vercel dashboard or `vercel.json`
    - Ensure all environment variables are correctly configured
 
 4. **SSL Certificates**:
@@ -891,6 +923,12 @@ kubectl describe pod <pod-name> -n backend
 # Check ConfigMaps and Secrets
 kubectl get configmap -n backend
 kubectl get secret -n backend
+
+# Verify payment service secret exists
+kubectl get secret payment-service-secret -n backend
+
+# If secret is missing, create it:
+./k8s/scripts/create-payment-secret.sh
 ```
 
 ### Vercel deployment issues

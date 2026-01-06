@@ -223,7 +223,36 @@ sed -i 's/imagePullPolicy: IfNotPresent/imagePullPolicy: Never/g' *-deployment.y
 
 Before deploying, ensure secrets and configs are set up for local development. **Configuration management is part of proper orchestration.**
 
-### Update Secrets (if needed)
+### Update Secrets
+
+**⚠️ IMPORTANT**: Never commit real secrets to git. Secret YAML files contain placeholders. Use the helper scripts or `kubectl create secret` commands.
+
+#### Payment Service Secret
+
+**Use the helper script (Recommended)**:
+
+```bash
+# Create payment service secret from setup-env.js or environment variables
+./k8s/scripts/create-payment-secret.sh
+```
+
+The script will automatically read from `setup-env.js` if environment variables are not set.
+
+**Manual creation**:
+
+```bash
+# Set environment variables
+export STRIPE_SECRET_KEY="your-stripe-secret-key"
+export STRIPE_WEBHOOK_SECRET="your-webhook-secret"
+
+# Create secret
+kubectl create secret generic payment-service-secret \
+  --from-literal=STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}" \
+  --from-literal=STRIPE_WEBHOOK_SECRET="${STRIPE_WEBHOOK_SECRET}" \
+  --namespace=backend
+```
+
+#### Other Secrets (if needed)
 
 Edit secret files with local development values:
 
@@ -231,7 +260,8 @@ Edit secret files with local development values:
 # Edit secrets
 vim k8s/database/postgres-secret.yaml
 vim k8s/auth/keycloak-secret.yaml
-vim k8s/backend/*-secret.yaml
+vim k8s/backend/product-service-secret.yaml
+vim k8s/backend/order-service-secret.yaml
 ```
 
 **Example for postgres-secret.yaml:**

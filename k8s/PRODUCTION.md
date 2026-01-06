@@ -254,7 +254,40 @@ sed -i 's|imagePullPolicy: Never|imagePullPolicy: Always|g' payment-service-depl
 
 ### Update Secrets
 
-**IMPORTANT**: Update all secrets with production values!
+**⚠️ IMPORTANT**: Never commit real secrets to git. Secret YAML files contain placeholders. Use the helper scripts or `kubectl create secret` commands.
+
+#### Payment Service Secret
+
+**Use the helper script (Recommended)**:
+
+```bash
+# Create payment service secret from setup-env.js or environment variables
+./k8s/scripts/create-payment-secret.sh
+```
+
+The script will:
+
+- Read Stripe keys from `setup-env.js` (if available)
+- Or use environment variables `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`
+- Create the Kubernetes secret in the `backend` namespace
+
+**Manual creation**:
+
+```bash
+# Set environment variables
+export STRIPE_SECRET_KEY="your-stripe-secret-key"
+export STRIPE_WEBHOOK_SECRET="your-webhook-secret"
+
+# Create secret
+kubectl create secret generic payment-service-secret \
+  --from-literal=STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY}" \
+  --from-literal=STRIPE_WEBHOOK_SECRET="${STRIPE_WEBHOOK_SECRET}" \
+  --namespace=backend
+```
+
+#### Other Secrets
+
+For other secrets (PostgreSQL, Keycloak, etc.), edit the YAML files:
 
 ```bash
 # Edit secrets
@@ -262,7 +295,6 @@ vim database/postgres-secret.yaml
 vim auth/keycloak-secret.yaml
 vim backend/product-service-secret.yaml
 vim backend/order-service-secret.yaml
-vim backend/payment-service-secret.yaml
 ```
 
 **Example for postgres-secret.yaml:**
@@ -419,7 +451,38 @@ mkdir -p ~/k8s
 
 ---
 
-## Step 8: Deploy to Production
+## Step 8: Set Up Secrets (Required Before Deployment)
+
+**⚠️ CRITICAL**: Secrets must be created before deploying services. The secret YAML files contain placeholders and should NOT be committed with real secrets.
+
+### Payment Service Secret
+
+```bash
+# Create payment service secret from setup-env.js or environment variables
+./k8s/scripts/create-payment-secret.sh
+```
+
+**Verify secret was created**:
+
+```bash
+kubectl get secret payment-service-secret -n backend
+```
+
+### Other Secrets
+
+Update other secrets as needed:
+
+```bash
+# Edit and apply other secrets
+vim database/postgres-secret.yaml
+vim auth/keycloak-secret.yaml
+kubectl apply -f database/postgres-secret.yaml
+kubectl apply -f auth/keycloak-secret.yaml
+```
+
+---
+
+## Step 9: Deploy to Production
 
 ### Automated Deployment
 
