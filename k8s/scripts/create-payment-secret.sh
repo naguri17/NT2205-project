@@ -28,16 +28,60 @@ echo "=========================================="
 # Function to extract value from setup-env.js
 extract_from_setup_env() {
     local key=$1
-    # Extract the value - handles both single-line and multi-line formats
-    # Pattern: STRIPE_SECRET_KEY: "value" or STRIPE_SECRET_KEY:\n    "value"
-    node -e "
+    # Extract the value from CONFIG object in setup-env.js
+    # Handles both formats:
+    #   STRIPE_SECRET_KEY:\n    "value",  (multi-line)
+    #   STRIPE_WEBHOOK_SECRET: "value",    (single-line)
+    
+    # Use Node.js to properly parse the JavaScript file
+    local result=$(node -e "
         const fs = require('fs');
         const content = fs.readFileSync('$SETUP_ENV_FILE', 'utf8');
-        const match = content.match(/\"$key\"\s*:\s*\"([^\"]+)\"/);
-        if (match) {
-            console.log(match[1]);
+        
+        // Find the CONFIG object section
+        const configMatch = content.match(/const CONFIG = \{([\s\S]*?)\};/);
+        if (!configMatch) {
+            process.exit(1);
         }
-    " 2>/dev/null || grep -A 1 "\"$key\":" "$SETUP_ENV_FILE" | grep -o '"[^"]*"' | head -1 | sed 's/"//g'
+        
+        const configContent = configMatch[1];
+        const key = '$key';
+        
+        // Pattern 1: key:\n    \"value\" (multi-line with indentation)
+        // Example: STRIPE_SECRET_KEY:\n    \"sk_test_...\"
+        const pattern1 = new RegExp(key + '\\s*:\\s*\\n\\s*\"([^\"]+)\"', 'm');
+        let match = configContent.match(pattern1);
+        if (match && match[1]) {
+            console.log(match[1].trim());
+            process.exit(0);
+        }
+        
+        // Pattern 2: key: \"value\" (single line)
+        // Example: STRIPE_WEBHOOK_SECRET: \"whsec_...\"
+        const pattern2 = new RegExp(key + '\\s*:\\s*\"([^\"]+)\"', 'm');
+        match = configContent.match(pattern2);
+        if (match && match[1]) {
+            console.log(match[1].trim());
+            process.exit(0);
+        }
+        
+        process.exit(1);
+    " 2>/dev/null)
+    
+    if [ -n "$result" ]; then
+        echo "$result"
+        return 0
+    fi
+    
+    # Fallback: use grep/sed - look for key: then get quoted value
+    # This handles both single-line and multi-line formats
+    local value=$(grep -A 2 "^[[:space:]]*$key:" "$SETUP_ENV_FILE" 2>/dev/null | grep -o '"[^"]*"' | head -1 | sed 's/"//g')
+    if [ -n "$value" ]; then
+        echo "$value"
+        return 0
+    fi
+    
+    return 1
 }
 
 # Try to get STRIPE_SECRET_KEY from environment or setup-env.js
