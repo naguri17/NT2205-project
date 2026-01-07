@@ -9,7 +9,7 @@ metadata:
         component: microservice
         tier: backend
 spec:
-    replicas: 2 # Multiple replicas for high availability
+    replicas: 1 # Multiple replicas for high availability
     selector:
         matchLabels:
             app: order-service

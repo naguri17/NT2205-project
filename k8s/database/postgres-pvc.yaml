@@ -9,6 +9,6 @@ spec:
         - ReadWriteOnce
     resources:
         requests:
-            storage: 10Gi
+            storage: 4Gi
     # For K3s, use local-path storage class
     storageClassName: local-path
