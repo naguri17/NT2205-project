@@ -97,11 +97,11 @@ spec:
                   key: KC_HEALTH_ENABLED
           resources:
             requests:
+              cpu: "200m"
               memory: "512Mi"
-              cpu: "500m"
             limits:
+              cpu: "500m"
               memory: "1Gi"
-              cpu: "1000m"
           livenessProbe:
             tcpSocket:
               port: 8080
