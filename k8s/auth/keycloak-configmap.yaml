@@ -5,7 +5,7 @@ metadata:
     name: keycloak-config
     namespace: auth
 data:
-    KC_HOSTNAME: auth.lapisweb.online
+    KC_HOSTNAME_URL: https://auth.lapisweb.online
     KC_HOSTNAME_STRICT: "false"
     KC_PROXY_HEADERS: xforwarded
     KC_HTTP_ENABLED: "true"

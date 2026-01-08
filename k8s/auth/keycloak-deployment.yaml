@@ -40,11 +40,11 @@ spec:
                 secretKeyRef:
                   name: keycloak-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
-            - name: KC_HOSTNAME
+            - name: KC_HOSTNAME_URL
               valueFrom:
                 configMapKeyRef:
                   name: keycloak-config
-                  key: KC_HOSTNAME
+                  key: KC_HOSTNAME_URL
             - name: KC_HOSTNAME_STRICT
               valueFrom:
                 configMapKeyRef:
