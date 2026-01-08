@@ -28,6 +28,9 @@ spec:
             - containerPort: 9001
               name: admin
               protocol: TCP
+            - containerPort: 8100
+              name: status
+              protocol: TCP
           env:
             - name: KONG_DATABASE
               value: "off"
@@ -39,6 +42,8 @@ spec:
               value: "0.0.0.0:9000"
             - name: KONG_ADMIN_LISTEN
               value: "127.0.0.1:9001"
+            - name: KONG_STATUS_LISTEN
+              value: "0.0.0.0:8100"
             - name: KONG_PLUGINS
               value: "bundled"
           volumeMounts:
@@ -48,26 +53,26 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
-              cpu: "300m"
+              cpu: "200m"
               memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           livenessProbe:
             httpGet:
-              path: /health
-              port: 9000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+              path: /status
+              port: 8100
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /health
-              port: 9000
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
+              path: /status
+              port: 8100
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 3
       volumes:
         - name: kong-config
