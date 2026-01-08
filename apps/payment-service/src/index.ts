@@ -45,7 +45,8 @@ const connectKafkaWithRetry = async (maxRetries = 5) => {
         error instanceof Error ? error.message : error,
       );
       if (attempt === maxRetries) {
-        throw error;
+        console.warn("[Kafka] All connection attempts failed. Running without Kafka.");
+        return false;
       }
       const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
       console.log(`[Kafka] Retrying in ${delay}ms...`);
@@ -56,21 +57,20 @@ const connectKafkaWithRetry = async (maxRetries = 5) => {
 };
 
 const start = async () => {
-  try {
-    // Start HTTP server first so health checks work
-    serve({
-      fetch: app.fetch,
-      port: 8002,
-    });
-    console.log("Payment service HTTP server is running on port 8002");
+  // Start HTTP server first so health checks work
+  serve({
+    fetch: app.fetch,
+    port: 8002,
+  });
+  console.log("Payment service HTTP server is running on port 8002");
 
-    // Then connect to Kafka with retry
-    await connectKafkaWithRetry();
+  // Then connect to Kafka with retry (non-blocking)
+  const kafkaConnected = await connectKafkaWithRetry();
+  if (kafkaConnected) {
     await runKafkaSubscriptions();
     console.log("Payment service fully initialized with Kafka");
-  } catch (error) {
-    console.error("Error starting server:", error);
-    process.exit(1);
+  } else {
+    console.log("Payment service running without Kafka");
   }
 };
 

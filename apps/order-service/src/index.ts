@@ -58,7 +58,8 @@ const connectKafkaWithRetry = async (maxRetries = 5) => {
         error instanceof Error ? error.message : error,
       );
       if (attempt === maxRetries) {
-        throw error;
+        console.warn("[Kafka] All connection attempts failed. Running without Kafka.");
+        return false;
       }
       const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
       console.log(`[Kafka] Retrying in ${delay}ms...`);
@@ -78,10 +79,14 @@ const start = async () => {
     await fastify.listen({ port: 8001, host: "0.0.0.0" });
     console.log("Order service HTTP server is running on port 8001");
 
-    // Then connect to Kafka with retry
-    await connectKafkaWithRetry();
-    await runKafkaSubscriptions();
-    console.log("Order service fully initialized with Kafka");
+    // Then connect to Kafka with retry (non-blocking)
+    const kafkaConnected = await connectKafkaWithRetry();
+    if (kafkaConnected) {
+      await runKafkaSubscriptions();
+      console.log("Order service fully initialized with Kafka");
+    } else {
+      console.log("Order service running without Kafka");
+    }
   } catch (err) {
     console.error("Error starting server:", err);
     process.exit(1);

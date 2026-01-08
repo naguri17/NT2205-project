@@ -55,16 +55,25 @@ app.use((err: any, req: Request, res: Response, next: Function) => {
     .json({ message: err.message || "Internal Server Error" });
 });
 
-const start = async () => {
+const connectKafka = async () => {
   try {
-    Promise.all([await producer.connect(), await consumer.connect()]);
-    app.listen(8000, () => {
-      console.log("Product service is running on 8000");
-    });
+    await Promise.all([producer.connect(), consumer.connect()]);
+    console.log("Kafka connected successfully");
+    return true;
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    console.warn("Kafka connection failed, running without Kafka:", error);
+    return false;
   }
+};
+
+const start = async () => {
+  // Start HTTP server first (for health checks)
+  app.listen(8000, () => {
+    console.log("Product service is running on 8000");
+  });
+
+  // Try to connect to Kafka (non-blocking)
+  await connectKafka();
 };
 
 start();
